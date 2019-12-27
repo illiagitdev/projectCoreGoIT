@@ -1,5 +1,4 @@
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -70,7 +69,7 @@ public class Main extends Application {
 
                 String str = searchText.getText();
                 YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {});
-                text.appendText(str + "\n" + response.code() + "\n" + responseYoutube.toString() + "\n");
+                text.setText(str + "\n" + response.code() + "\n" + responseYoutube.toString() + "\n");
 
                 Call call;
 //                call.enqueue();
