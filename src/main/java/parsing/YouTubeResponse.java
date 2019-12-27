@@ -3,13 +3,15 @@ package parsing;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import parsing.components.Items;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class YouTubeResponse {
     private String nextPageToken;
     private String prevPageToken;
-    private Items[] items;
+    private List<Items> items = new ArrayList<>();
 
     public String getNextPageToken() {
         return nextPageToken;
@@ -27,20 +29,20 @@ public class YouTubeResponse {
         this.prevPageToken = prevPageToken;
     }
 
-    public Items[] getItems() {
+    public List<Items> getItems() {
         return items;
     }
 
-    public void setItems(Items[] items) {
+    public void setItems(List<Items> items) {
         this.items = items;
     }
 
     @Override
     public String toString() {
-        return "APIResponse{" + "\n" +
-                ", nextPageToken='" + nextPageToken + '\'' + "\n" +
+        return "YouTubeResponse{" + "\n" +
+                "nextPageToken='" + nextPageToken + '\'' + "\n" +
                 ", prevPageToken='" + prevPageToken + '\'' + "\n" +
-                ", items=" + Arrays.toString(items) + "\n" +
+                ", items=" + items + "\n" +
                 '}';
     }
 }

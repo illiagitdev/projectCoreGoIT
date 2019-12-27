@@ -12,7 +12,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import okhttp3.*;
 import parsing.YouTubeResponse;
-import responseAll.APIResponse;
 
 import java.io.IOException;
 
@@ -22,6 +21,8 @@ public class Main extends Application {
     private static final int HEIGHT = 500;
     private static final int WIDTH = 650;
     private static ObjectMapper mapper = new ObjectMapper();
+    private OkHttpClient client = new OkHttpClient();
+
 
 
     @Override
@@ -47,7 +48,6 @@ public class Main extends Application {
 
     private void setupUI(Group root) {
         TextField searchText = new TextField();
-        OkHttpClient client = new OkHttpClient();
 
         Button searchButton = new Button("Search");
         HBox searchBox = new HBox(searchText, searchButton);
@@ -67,26 +67,22 @@ public class Main extends Application {
                         .get()
                         .build())
                         .execute();
+
                 String str = searchText.getText();
-                ObjectMapper mapper = new ObjectMapper();
-//                List<YoutubeResponse> list = mapper.
-//                        readValue(responseAll.body().bytes(), new TypeReference<List<YoutubeResponse>>(){});
-                mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
                 YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {});
-//                text.appendText(new String(responseAll.body().bytes()));
                 text.appendText(str + "\n" + response.code() + "\n" + responseYoutube.toString() + "\n");
 
                 Call call;
 //                call.enqueue();
+
+                response.body().close();
             } catch (IOException e) {
                 e.printStackTrace();
                 text.setText(e.getMessage());
             }
-
         });
         root.getChildren().addAll(vBox);
     }
-
 
     private HttpUrl buildHttpUrl(String searchText) {
         return buildHttpUrl(searchText ,"25");
