@@ -1,4 +1,5 @@
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.scene.Group;
@@ -10,6 +11,8 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import okhttp3.*;
+import parsing.YouTubeResponse;
+import responseAll.APIResponse;
 
 import java.io.IOException;
 
@@ -19,6 +22,7 @@ public class Main extends Application {
     private static final int HEIGHT = 500;
     private static final int WIDTH = 650;
     private static ObjectMapper mapper = new ObjectMapper();
+
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -56,13 +60,9 @@ public class Main extends Application {
         VBox vBox = new VBox(searchBox, text);
 
 
-        search.setOnMouseClicked(event -> {
-
-            OkHttpClient client = new OkHttpClient();
-
         searchButton.setOnMouseClicked(event -> {
             try {
-                main.java.core_project.response.Response response = client.newCall(new Request.Builder().
+                Response response = client.newCall(new Request.Builder().
                         url(buildHttpUrl(searchText.getText()))
                         .get()
                         .build())
@@ -70,9 +70,10 @@ public class Main extends Application {
                 String str = searchText.getText();
                 ObjectMapper mapper = new ObjectMapper();
 //                List<YoutubeResponse> list = mapper.
-//                        readValue(response.body().bytes(), new TypeReference<List<YoutubeResponse>>(){});
-                YoutubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YoutubeResponse>() {});
-//                text.appendText(new String(response.body().bytes()));
+//                        readValue(responseAll.body().bytes(), new TypeReference<List<YoutubeResponse>>(){});
+                mapper.disable(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES);
+                YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {});
+//                text.appendText(new String(responseAll.body().bytes()));
                 text.appendText(str + "\n" + response.code() + "\n" + responseYoutube.toString() + "\n");
 
                 Call call;
@@ -99,7 +100,6 @@ public class Main extends Application {
                 .addQueryParameter("part","snippet")
                 .addQueryParameter("MaxResults",maxResults)
                 .addQueryParameter("q",searchText)
-                .addQueryParameter("","")
                 .addQueryParameter("key",KEY)
                 .build();
     }

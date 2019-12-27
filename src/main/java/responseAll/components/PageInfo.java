@@ -1,11 +1,8 @@
-package main.java.core_project.response.components;
+package responseAll.components;
 
 public class PageInfo {
     private int totalResults;
     private int resultsPerPage;
-
-    public PageInfo() {
-    }
 
     public int getTotalResults() {
         return totalResults;

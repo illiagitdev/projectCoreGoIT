@@ -1,21 +1,18 @@
-package main.java.core_project.response;
+package responseAll;
 
-import main.java.core_project.response.components.PageInfo;
-import main.java.core_project.response.components.SearchItem;
+import responseAll.components.PageInfo;
+import responseAll.components.Items;
 
 import java.util.Arrays;
 
-public class Response {
+public class APIResponse {
     private String kind;
     private String etag;
     private String nextPageToken;
     private String prevPageToken;
     private String regionCode;
     private PageInfo pageInfo;
-    private SearchItem[] items;
-
-    public Response() {
-    }
+    private Items[] items;
 
     public String getKind() {
         return kind;
@@ -65,17 +62,17 @@ public class Response {
         this.pageInfo = pageInfo;
     }
 
-    public SearchItem[] getItems() {
+    public Items[] getItems() {
         return items;
     }
 
-    public void setItems(SearchItem[] items) {
+    public void setItems(Items[] items) {
         this.items = items;
     }
 
     @Override
     public String toString() {
-        return "Response{" + "\n" +
+        return "APIResponse{" + "\n" +
                 "kind='" + kind + '\'' + "\n" +
                 ", etag='" + etag + '\'' + "\n" +
                 ", nextPageToken='" + nextPageToken + '\'' + "\n" +

@@ -1,5 +1,8 @@
-package main.java.core_project.response.components;
+package parsing.components;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Snippet {
     private String publishedAt;
     private String channelId;
@@ -7,10 +10,6 @@ public class Snippet {
     private String description;
     private Thumbnails thumbnails;
     private String channelTitle;
-    private String liveBroadcastContent;
-
-    public Snippet() {
-    }
 
     public String getPublishedAt() {
         return publishedAt;
@@ -60,24 +59,15 @@ public class Snippet {
         this.channelTitle = channelTitle;
     }
 
-    public String getLiveBroadcastContent() {
-        return liveBroadcastContent;
-    }
-
-    public void setLiveBroadcastContent(String liveBroadcastContent) {
-        this.liveBroadcastContent = liveBroadcastContent;
-    }
-
     @Override
     public String toString() {
-        return "Snippet{" +
+        return "Snippet{" + "\n" +
                 "publishedAt='" + publishedAt + '\'' + "\n" +
                 ", channelId='" + channelId + '\'' + "\n" +
                 ", title='" + title + '\'' + "\n" +
                 ", description='" + description + '\'' + "\n" +
                 ", thumbnails=" + thumbnails.toString() + "\n" +
                 ", channelTitle='" + channelTitle + '\'' + "\n" +
-                ", liveBroadcastContent='" + liveBroadcastContent + '\'' + "\n" +
                 '}';
     }
 }

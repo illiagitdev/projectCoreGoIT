@@ -1,4 +1,4 @@
-package main.java.core_project;
+package responseAll.components;
 
 public class Snippet {
     private String publishedAt;
@@ -8,19 +8,6 @@ public class Snippet {
     private Thumbnails thumbnails;
     private String channelTitle;
     private String liveBroadcastContent;
-
-    public Snippet() {
-    }
-
-    public Snippet(String publishedAt, String channelId, String title, String description, Thumbnails thumbnails, String channelTitle, String liveBroadcastContent) {
-        this.publishedAt = publishedAt;
-        this.channelId = channelId;
-        this.title = title;
-        this.description = description;
-        this.thumbnails = thumbnails;
-        this.channelTitle = channelTitle;
-        this.liveBroadcastContent = liveBroadcastContent;
-    }
 
     public String getPublishedAt() {
         return publishedAt;
@@ -81,13 +68,13 @@ public class Snippet {
     @Override
     public String toString() {
         return "Snippet{" +
-                "publishedAt='" + publishedAt + '\'' +
-                ", channelId='" + channelId + '\'' +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", thumbnails=" + thumbnails.toString() +
-                ", channelTitle='" + channelTitle + '\'' +
-                ", liveBroadcastContent='" + liveBroadcastContent + '\'' +
+                "publishedAt='" + publishedAt + '\'' + "\n" +
+                ", channelId='" + channelId + '\'' + "\n" +
+                ", title='" + title + '\'' + "\n" +
+                ", description='" + description + '\'' + "\n" +
+                ", thumbnails=" + thumbnails.toString() + "\n" +
+                ", channelTitle='" + channelTitle + '\'' + "\n" +
+                ", liveBroadcastContent='" + liveBroadcastContent + '\'' + "\n" +
                 '}';
     }
 }

@@ -1,13 +1,10 @@
-package main.java.core_project.response.components;
+package responseAll.components;
 
-public class SearchItem {
+public class Items {
     private String kind;
-    private  String etag;
+    private String etag;
     private SearchID id;
     private Snippet snippet;
-
-    public SearchItem() {
-    }
 
     public String getKind() {
         return kind;
@@ -43,7 +40,7 @@ public class SearchItem {
 
     @Override
     public String toString() {
-        return "SearchItem{" + "\n"+
+        return "Items{" + "\n"+
                 "kind='" + kind + '\'' + "\n"+
                 ", etag='" + etag + '\'' + "\n"+
                 ", id=" + id + "\n"+
