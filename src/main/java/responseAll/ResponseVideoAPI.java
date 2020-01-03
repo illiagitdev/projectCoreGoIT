@@ -3,16 +3,18 @@ package responseAll;
 import responseAll.components.PageInfo;
 import responseAll.components.Items;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
-public class APIResponse {
+public class ResponseVideoAPI {
     private String kind;
     private String etag;
     private String nextPageToken;
     private String prevPageToken;
     private String regionCode;
     private PageInfo pageInfo;
-    private Items[] items;
+    private List<Items> items = new ArrayList<>();
 
     public String getKind() {
         return kind;
@@ -62,11 +64,11 @@ public class APIResponse {
         this.pageInfo = pageInfo;
     }
 
-    public Items[] getItems() {
+    public List<Items> getItems() {
         return items;
     }
 
-    public void setItems(Items[] items) {
+    public void setItems(List<Items> items) {
         this.items = items;
     }
 
@@ -79,7 +81,7 @@ public class APIResponse {
                 ", prevPageToken='" + prevPageToken + '\'' + "\n" +
                 ", regionCode='" + regionCode + '\'' + "\n" +
                 ", pageInfo=" + pageInfo + "\n" +
-                ", items=" + Arrays.toString(items) + "\n" +
+                ", items=" + items.toString() + "\n" +
                 '}';
     }
 }
