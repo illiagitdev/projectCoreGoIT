@@ -2,9 +2,6 @@ import apiConnection.BuildHttpRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.stage.Popup;
 import javafx.stage.Stage;
 import okhttp3.*;
 import querryResponse.YouTubeResponse;
@@ -23,61 +20,51 @@ public class Main extends Application {
     private UserUI userUI = new UserUI();
 
     @Override
-    public void start(Stage primaryStage) throws Exception {
-        Group root = new Group();
-        Scene scene = new Scene(root);
-        primaryStage.setScene(scene);
+    public void start(Stage primaryStage) {
+        // configure iu: all things on main screen
+        userUI.setupWindow(primaryStage);
         primaryStage.show();
 
-        setupUI(root);
-
-        userUI.setupWindow(primaryStage);
+        services();
     }
 
-    private void setupUI(Group root) {
-        userUI.setupUI(root);
-
-        userUI.advancedSearchButton.setOnMouseClicked(event -> {
+    private void services() {
+        // advanced search - //todo: write UI and implementation
+        UserUI.advancedSearchButton.setOnMouseClicked(event -> {
 
         });
 
-        userUI.searchButton.setOnMouseClicked(event -> {
+        UserUI.searchButton.setOnMouseClicked(event -> {
+            String str = UserUI.searchText.getText();
+
+            // skipp search if no text for empty search
+            if (str.equals("")) {
+                System.out.println("No search text!!!");
+                return;
+            }
+
             Call call = client.newCall(new Request.Builder().
                     url(BuildHttpRequest.buildHttpUrl(UserUI.searchText.getText()))
                     .get()
                     .build());
+            // asynchronous call
             call.enqueue(new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if(response.isSuccessful() && (response.code() == 200)) {
-
-                        String str = UserUI.searchText.getText();
-                        YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {
-                        });
+                    if (response.isSuccessful() && (response.code() == 200)) {
+                        // response from YouTube
+                        YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {});
 
                         System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + str + ConsoleColors.RESET +
-                                "\n\tResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
-                        UserUI.text.setText(responseYoutube.toString() + "\n");
+                                "\nResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
 
-                        List<SearchResult> searchResults = new ArrayList<>();
-                        SearchResult result;
-                        List<Items> items = responseYoutube.getItems();
-                        for (int i = 0; i < items.size(); i++) {
-                            result = new SearchResult();
-                            result.setVideoName(items.get(i).getSnippet().getChannelTitle());
-                            result.setChannelName(items.get(i).getSnippet().getChannelTitle());
-                            result.setPublicationDate(items.get(i).getSnippet().getPublishedAt());
-                            result.setUrlID(items.get(i).getId().getVideoId());
-                            result.setUrlIDChannel(items.get(i).getId().getChannelId());
-
-                            searchResults.add(result);
-                            for (SearchResult x : searchResults) {
-                                System.out.println(x.toString());
-                            }
-                            client.dispatcher().executorService().shutdown();
-                        }
+                        //show response in separate text field
+                        userUI.showSearchResults(responseYoutube);
                     }
+                    // appears exception in dispatcher
+//                    client.dispatcher().executorService().shutdown();
                 }
+
                 @Override
                 public void onFailure(Call call, IOException e) {
                     System.out.println("Error:");
@@ -87,16 +74,6 @@ public class Main extends Application {
         });
 //        root.getChildren().addAll(UserUI.vBox);
     }
-//        Название видео
-//        Название канала
-//        Дата публикации
-//        Кнопка - View. При нажатии на которую воспроизводиться видео в окне программы.
-//        изображение из видео
-//        Кол-во дней. Если видео было опубликовано раньше чем Х дней назад, значит его не надо отображать в поиске.
-//
-//        Аватарка канала
-//        Название канала
-//        Описание канала
 
     public static void main(String[] args) {
         launch(args);

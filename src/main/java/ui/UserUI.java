@@ -2,6 +2,7 @@ package ui;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -10,8 +11,11 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import querryResponse.YouTubeResponse;
+import querryResponse.components.Items;
 import result.SearchResult;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class UserUI {
@@ -29,6 +33,12 @@ public class UserUI {
     public static VBox searchBoxFull = new VBox(searchBox, searchBoxExtend, text);
 
     public void setupWindow(Stage stage) {
+
+        Group root = new Group();
+        Scene scene = new Scene(root);
+        stage.setScene(scene);
+        setupUI(root);
+
         //* set up main stage
         stage.setMaxWidth(WIDTH * 2);
         stage.setMaxHeight(HEIGHT * 2);
@@ -49,9 +59,10 @@ public class UserUI {
 
         //* setting up search box properties, contain search field and search button + advanced button
         searchBox.setSpacing(15);
-        searchBox.setLayoutX(35);
-        searchBox.setLayoutY(25);
-        searchBox.setPrefWidth(300);
+//        searchBox.setLayoutX(35);
+//        searchBox.setLayoutY(25);
+//        searchBox.setPrefWidth(300);
+        searchBox.setPadding(new Insets(15,20,10,10));
 
         searchBoxFull.setSpacing(15);
         text.setWrapText(true);
@@ -99,5 +110,30 @@ public class UserUI {
 //            }
 //        });
 //        pane.getChildren().add(lv);
+    }
+
+    // getget response from click on search button
+    public void showSearchResults(YouTubeResponse responseYoutube) {
+        text.setText(responseYoutube.toString() + "\n");
+
+        // components from response we need
+        // todo: extend to all required fields: will be thread safe with internal builder
+        List<SearchResult> searchResults = new ArrayList<>();
+        SearchResult result;
+        List<Items> items = responseYoutube.getItems();
+        for (int i = 0; i < items.size(); i++) {
+            result = new SearchResult.Builder()
+                    .setVideoName(items.get(i).getSnippet().getTitle())
+                    .setChannelName(items.get(i).getSnippet().getChannelTitle())
+                    .setPublicationDate(items.get(i).getSnippet().getPublishedAt())
+                    .setUrlID(items.get(i).getId().getVideoId())
+                    .setUrlIDChannel(items.get(i).getId().getChannelId())
+                    .build();
+
+            searchResults.add(result);
+            for (SearchResult x : searchResults) {
+                System.out.println(x.toString());
+            }
+        }
     }
 }
