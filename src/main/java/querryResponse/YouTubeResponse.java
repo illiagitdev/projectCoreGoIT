@@ -1,10 +1,9 @@
-package parsing;
+package querryResponse;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import parsing.components.Items;
+import querryResponse.components.Items;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

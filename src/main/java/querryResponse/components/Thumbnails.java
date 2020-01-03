@@ -1,4 +1,4 @@
-package parsing.components;
+package querryResponse.components;
 
 
 import com.fasterxml.jackson.annotation.JsonProperty;

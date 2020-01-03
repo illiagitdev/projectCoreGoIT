@@ -1,4 +1,4 @@
-package parsing.components;
+package querryResponse.components;
 
 public class VideoImage {
     private String url;

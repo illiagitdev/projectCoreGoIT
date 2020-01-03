@@ -1,28 +1,26 @@
+import apiConnection.BuildHttpRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.stage.Popup;
 import javafx.stage.Stage;
 import okhttp3.*;
-import parsing.YouTubeResponse;
+import querryResponse.YouTubeResponse;
+import querryResponse.components.Items;
+import result.SearchResult;
+import ui.ConsoleColors;
+import ui.UserUI;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Main extends Application {
-    private static final String ROOT_URL = "https://www.googleapis.com";
-    private static final String KEY = "AIzaSyDsxIyAMEYNxF5s4KqcP2hA0trTYzi5ZaU";
-    private static final int HEIGHT = 500;
-    private static final int WIDTH = 650;
     private static ObjectMapper mapper = new ObjectMapper();
     private OkHttpClient client = new OkHttpClient();
-
-
+    private UserUI userUI = new UserUI();
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -33,70 +31,61 @@ public class Main extends Application {
 
         setupUI(root);
 
-        setupWindow(primaryStage);
-    }
-
-    private void setupWindow(Stage stage) {
-        stage.setMaxWidth(WIDTH);
-        stage.setMaxHeight(HEIGHT);
-
-        stage.setMinWidth(WIDTH);
-        stage.setMinHeight(HEIGHT);
-        stage.setTitle("YouTube Search");
+        userUI.setupWindow(primaryStage);
     }
 
     private void setupUI(Group root) {
-        TextField searchText = new TextField();
+        userUI.setupUI(root);
 
-        Button searchButton = new Button("Search");
-        HBox searchBox = new HBox(searchText, searchButton);
-        searchBox.setSpacing(15);
-        searchBox.setLayoutX(35);
-        searchBox.setLayoutY(25);
+        userUI.advancedSearchButton.setOnMouseClicked(event -> {
 
-        TextArea text = new TextArea();
-        text.setWrapText(true);
-        VBox vBox = new VBox(searchBox, text);
-
-
-        searchButton.setOnMouseClicked(event -> {
-            try {
-                Response response = client.newCall(new Request.Builder().
-                        url(buildHttpUrl(searchText.getText()))
-                        .get()
-                        .build())
-                        .execute();
-
-                String str = searchText.getText();
-                YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {});
-                text.setText(str + "\n" + response.code() + "\n" + responseYoutube.toString() + "\n");
-
-                Call call;
-//                call.enqueue();
-
-                response.body().close();
-            } catch (IOException e) {
-                e.printStackTrace();
-                text.setText(e.getMessage());
-            }
         });
-        root.getChildren().addAll(vBox);
-    }
 
-    private HttpUrl buildHttpUrl(String searchText) {
-        return buildHttpUrl(searchText ,"25");
-    }
+        userUI.searchButton.setOnMouseClicked(event -> {
+            Call call = client.newCall(new Request.Builder().
+                    url(BuildHttpRequest.buildHttpUrl(UserUI.searchText.getText()))
+                    .get()
+                    .build());
+            call.enqueue(new Callback() {
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    if(response.isSuccessful() && (response.code() == 200)) {
 
-    private HttpUrl buildHttpUrl(String searchText, String maxResults) {
-        return HttpUrl.parse(ROOT_URL).newBuilder()
-                .addPathSegment("youtube")
-                .addPathSegment("v3")
-                .addPathSegment("search")
-                .addQueryParameter("part","snippet")
-                .addQueryParameter("MaxResults",maxResults)
-                .addQueryParameter("q",searchText)
-                .addQueryParameter("key",KEY)
-                .build();
+                        String str = UserUI.searchText.getText();
+                        YouTubeResponse responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<YouTubeResponse>() {
+                        });
+
+                        System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + str + ConsoleColors.RESET +
+                                "\n\tResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
+                        UserUI.text.setText(responseYoutube.toString() + "\n");
+
+                        List<SearchResult> searchResults = new ArrayList<>();
+                        SearchResult result;
+                        List<Items> items = responseYoutube.getItems();
+                        for (int i = 0; i < items.size(); i++) {
+                            result = new SearchResult();
+                            result.setVideoName(items.get(i).getSnippet().getChannelTitle());
+                            result.setChannelName(items.get(i).getSnippet().getChannelTitle());
+                            result.setPublicationDate(items.get(i).getSnippet().getPublishedAt());
+                            result.setUrlID(items.get(i).getId().getVideoId());
+                            result.setUrlIDChannel(items.get(i).getId().getChannelId());
+
+                            searchResults.add(result);
+                            for (SearchResult x : searchResults) {
+                                System.out.println(x.toString());
+                            }
+                            client.dispatcher().executorService().shutdown();
+                        }
+                    }
+                }
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    System.out.println("Error:");
+                    System.out.println(e.getStackTrace());
+                }
+            });
+        });
+//        root.getChildren().addAll(UserUI.vBox);
     }
 //        Название видео
 //        Название канала
