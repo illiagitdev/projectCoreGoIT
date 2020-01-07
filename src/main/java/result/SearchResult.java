@@ -80,4 +80,15 @@ public class SearchResult {
                     urlIDChannel);
         }
     }
+
+    @Override
+    public String toString() {
+        return "SearchResult{" +
+                "videoName='" + videoName + '\'' +
+                ", channelName='" + channelName + '\'' +
+                ", publicationDate='" + publicationDate + '\'' +
+                ", urlID='" + urlID + '\'' +
+                ", urlIDChannel='" + urlIDChannel + '\'' +
+                '}';
+    }
 }

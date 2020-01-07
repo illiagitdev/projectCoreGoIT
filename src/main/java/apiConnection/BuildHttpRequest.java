@@ -8,7 +8,7 @@ public class BuildHttpRequest {
     private static final String KEY = "AIzaSyDsxIyAMEYNxF5s4KqcP2hA0trTYzi5ZaU";
 
     public static HttpUrl buildHttpUrl(String searchText) {
-        return buildHttpUrl(searchText ,"25");
+        return buildHttpUrl(searchText , "25");
     }
 
     private static HttpUrl buildHttpUrl(String searchText, String maxResults) {
@@ -17,13 +17,13 @@ public class BuildHttpRequest {
                 .addPathSegment("v3")
                 .addPathSegment("search")
                 .addQueryParameter("part","snippet")
-                .addQueryParameter("MaxResults",maxResults)
-                .addQueryParameter("q",searchText)
-                .addQueryParameter("key",KEY)
+                .addQueryParameter("maxResults", maxResults)
+                .addQueryParameter("q", searchText)
+                .addQueryParameter("key", KEY)
                 .build();
     }
 
-    private static HttpUrl buildChannelHttpUrl(String channelID) {
+    public static HttpUrl buildChannelHttpUrl(String channelID) {
         return HttpUrl.parse(ROOT_URL).newBuilder()
                 .addPathSegment("youtube")
                 .addPathSegment("v3")
@@ -34,7 +34,7 @@ public class BuildHttpRequest {
                 .build();
     }
 
-    private static HttpUrl buildYouTubeWatchUrl(String videoID) {
+    public static HttpUrl buildYouTubeWatchUrl(String videoID) {
         return HttpUrl.parse(YOUTUBE_URL).newBuilder()
                 .addPathSegment("watch")
                 .addQueryParameter("v",videoID)

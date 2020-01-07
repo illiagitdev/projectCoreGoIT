@@ -9,7 +9,7 @@ public class Main extends Application {
     public void start(Stage primaryStage) {
         // configure iu: all things on main screen
         userUI.setupWindow(primaryStage);
-        primaryStage.show();
+//        primaryStage.show();
 
         userUI.simpleSearch();
         userUI.advancedSearch();

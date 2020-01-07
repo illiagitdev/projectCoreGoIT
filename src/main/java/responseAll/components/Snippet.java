@@ -1,5 +1,8 @@
 package responseAll.components;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Snippet {
     private String publishedAt;
     private String channelId;

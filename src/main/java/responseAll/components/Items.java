@@ -1,5 +1,8 @@
 package responseAll.components;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Items {
     private String kind;
     private String etag;
