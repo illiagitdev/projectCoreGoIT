@@ -1,18 +1,16 @@
 import javafx.application.Application;
 import javafx.stage.Stage;
-import ui.UserUI;
+import services.Operational;
 
 public class Main extends Application {
-    private UserUI userUI = new UserUI();
 
     @Override
     public void start(Stage primaryStage) {
-        // configure iu: all things on main screen
-        userUI.setupWindow(primaryStage);
-//        primaryStage.show();
+        //will do everything with main screen
+        Operational operational = new Operational();
+        operational.run(primaryStage);
 
-        userUI.simpleSearch();
-        userUI.advancedSearch();
+        primaryStage.show();
     }
 
     public static void main(String[] args) {

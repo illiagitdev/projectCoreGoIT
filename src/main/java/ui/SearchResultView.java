@@ -1,24 +1,16 @@
 package ui;
 
 import apiConnection.BuildHttpRequest;
-import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.layout.GridPane;
-import javafx.scene.media.Media;
-import javafx.scene.media.MediaPlayer;
-import javafx.scene.media.MediaView;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import okhttp3.HttpUrl;
 import result.SearchResult;
-
-import javax.print.DocFlavor;
-import javax.swing.text.html.ListView;
-import java.net.URL;
 
 public class SearchResultView extends ListCell<String> {
     private Button view;

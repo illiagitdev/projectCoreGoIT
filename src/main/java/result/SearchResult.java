@@ -7,7 +7,7 @@ public class SearchResult {
     private final String urlID;
     private final String urlIDChannel;
 
-    public SearchResult(String videoName, String channelName, String publicationDate, String urlID, String urlIDChannel) {
+    private SearchResult(String videoName, String channelName, String publicationDate, String urlID, String urlIDChannel) {
         this.videoName = videoName;
         this.channelName = channelName;
         this.publicationDate = publicationDate;
