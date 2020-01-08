@@ -14,7 +14,6 @@ import responseAll.components.Items;
 import result.SearchResult;
 import ui.ConsoleColors;
 import ui.IuiElements;
-import ui.SearchResultView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class Controls implements IuiElements {
             call.enqueue(new Callback() {
                 @Override
                 public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful() && (response.code() == 200)) {
+                    if (response.isSuccessful() && isSuccess(response)) {
                         // response from YouTube
                         ResponseVideoAPI responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<ResponseVideoAPI>() {
                         });
@@ -98,5 +97,21 @@ public class Controls implements IuiElements {
 
         ObservableList<GridPane> observableList = FXCollections.observableList(sample);
         resultsList.setItems(observableList);
+    }
+
+    private boolean isSuccess(Response response) {
+        int code = response.code();
+        switch (code){
+            case 200:
+                return true;
+            case 400:{
+                System.out.println("something went wrond");
+                return false;
+            }
+            default:{
+                System.out.println("not best result");
+                return false;
+            }
+        }
     }
 }

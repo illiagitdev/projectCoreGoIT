@@ -1,4 +1,4 @@
-package ui;
+package services;
 
 import apiConnection.BuildHttpRequest;
 import javafx.scene.Scene;
