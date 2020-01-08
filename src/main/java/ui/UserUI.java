@@ -83,51 +83,6 @@ public class UserUI implements IuiElements {
         resultsBox.setLayoutY(100);
         resultsBox.setMaxSize(750, 550);
 
-        //************************************
-//        Button view;
-//        GridPane gridPane;
-//        Label videoName;
-//        Label channelName;
-//        Label published;
-//
-//        view = new Button("View");
-//        videoName = new Label("dsdsd");
-//        channelName = new Label("cccc");
-//        published = new Label("sdac");
-//        gridPane = new GridPane();
-//
-//        view.setOnMouseClicked(event -> {
-//                    WebView webView = new WebView();
-//                    webView.getEngine().load("https://www.youtube.com/watch?v=X7kXWzHAn3s");
-//                    webView.setPrefSize(640, 390);
-//
-////            Media media = new Media("https://www.youtube.com/embed/X7kXWzHAn3s");
-////            MediaPlayer player = new MediaPlayer(media);
-////            player.setAutoPlay(true);
-////            MediaView mediaView = new MediaView(player);
-////            Group newGroup = new Group();
-////            newGroup.getChildren().addAll(mediaView);
-////            Scene scene1 = new Scene(newGroup, 600, 400);
-//
-//                    Stage stageX = new Stage();
-//            stageX.setScene(new Scene(webView));
-//                    stageX.show();
-//        });
-//
-//                gridPane.add(view, 0, 0);
-//        gridPane.add(videoName, 1, 0);
-//        gridPane.add(channelName, 2, 0);
-//        gridPane.add(published, 3, 0);
-//
-//        SearchResultView test1 = new SearchResultView(new SearchResult("q1", "q2", "q3", "q4", "q5"));
-//        List<GridPane> sample = new ArrayList<>();
-//        sample.add(gridPane);
-//        sample.add(test1.newList());
-//
-//        ObservableList<GridPane> observableList = FXCollections.observableList(sample);
-//        resultsList.setItems(observableList);
-//        //*******************************
-
         rootHeader.setPrefWidth(scene.getWidth());
         rootHeader.setMaxWidth(scene.getWidth());
         rootHeader.getChildren().addAll(/*gridPane, */searchBox, resultsBox);
@@ -193,7 +148,7 @@ public class UserUI implements IuiElements {
                         showSearchResults(responseYoutube);
                     }
                     // appears exception in dispatcher
-                    client.dispatcher().executorService().shutdown();
+//                    client.dispatcher().executorService().shutdown();
                 }
 
                 @Override
@@ -234,7 +189,7 @@ public class UserUI implements IuiElements {
                     .setUrlID(items.get(i).getId().getVideoId())
                     .setUrlIDChannel(items.get(i).getId().getChannelId())
                     .build();
-
+        items.get(0).getSnippet().getThumbnails().
             searchResults.add(result);
         }
         text.appendText(searchResults.toString());
@@ -248,40 +203,7 @@ public class UserUI implements IuiElements {
         ObservableList<GridPane> observableList = FXCollections.observableList(sample);
         resultsList.setItems(observableList);
 
-        SearchResultView test = new SearchResultView(searchResults.get(0));
-
-//        for (int i = 0; i < searchResults.size(); i++) {
-//            System.out.println(i + searchResults.get(i).toString());
-//        }
-
-//        resultsList.setItems(observableList);
-
-//
-//        ListView<SearchResultView> resultListView = new ListView<>();
-//        resultsList.setCellFactory(new javafx.util.Callback<ListView<SearchResultView>, ListCell<SearchResultView>>() {
-//            @Override
-//            public ListCell<SearchResultView> call(ListView<SearchResultView> param) {
-//                ListCell<SearchResultView> newCell = new ListCell<>();
-//                newCell.setItem(new SearchResultView(searchResults.get(0)));
-//                return newCell;
-//            }
-//        });
-//        resultsList.setItems(observableList);
-
-
-        rootHeader.getChildren().addAll(test);
-        //        root.getChildren().addAll(resultListView);
-//        StackPane pane = new StackPane();
-//        Scene scene = new Scene(pane, 300, 150);
-//        ObservableList<String> list = FXCollections.observableArrayList(
-//                "Item 1", "Item 2", "Item 3", "Item 4");
-//        ListView<String> lv = new ListView<>(list);
-//        lv.setCellFactory(new Callback<ListView<String>, ListCell<String>>() {
-//            @Override
-//            public ListCell<String> call(ListView<String> param) {
-//                return new SearchResult();
-//            }
-//        });
-//        pane.getChildren().add(lv);
+//        SearchResultView test = new SearchResultView(searchResults.get(0));
+//        rootHeader.getChildren().addAll(test);
     }
 }

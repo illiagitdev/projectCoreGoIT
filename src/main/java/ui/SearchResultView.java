@@ -29,6 +29,8 @@ public class SearchResultView extends ListCell<String> {
     private String urlID;
     private String urlIDChannel;
 
+
+
     public SearchResultView(SearchResult searchResult) {
         view = new Button("View");
         videoName = new Label(searchResult.getVideoName());
