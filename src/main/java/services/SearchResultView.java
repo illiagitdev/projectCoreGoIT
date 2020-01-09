@@ -14,11 +14,6 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import result.SearchResult;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-
 public class SearchResultView extends ListCell<String> {
     private Button view;
     private GridPane gridPane;
@@ -34,38 +29,30 @@ public class SearchResultView extends ListCell<String> {
         videoName = new Label(searchResult.getVideoName());
         channelName = new Label(searchResult.getChannelName());
         published = new Label(searchResult.getPublicationDate());
+        imageView = new ImageView();
         gridPane = new GridPane();
         urlID = searchResult.getUrlID();
         urlIDChannel = searchResult.getUrlIDChannel();
-        imageView = loadImage(searchResult.getUrlPathToImage());
+        // through callable
+//        imageView = loadImage(searchResult.getUrlPathToImage());
+        // through runnable
+//        new Thread(new ImageLoader(imageView, searchResult.getUrlPathToImage())).start();
 
         onClick(BuildHttpRequest.buildYouTubeWatchUrl(searchResult.getUrlID()));
-        view.setOnMouseClicked(event -> {
-            System.out.println("we see some movie" + this.getClass());
-        });
+        loadImage(searchResult.getUrlPathToImage());
 
+        imageView.setFitHeight(10);
+        imageView.setFitWidth(15);
         gridPane.add(imageView, 0, 0);
+//        gridPane.add(ImageViewBuilder.create().image(new Image(searchResult.getUrlPathToImage())).build(), 0, 0);
         gridPane.add(view, 1, 0);
         gridPane.add(videoName, 2, 0);
         gridPane.add(channelName, 3, 0);
         gridPane.add(published, 4, 0);
     }
 
-    private ImageView loadImage(String urlPathToImage) {
-//        ExecutorService executor = Executors.newSingleThreadExecutor();
-//        Callable<ImageView> imageViewCallable = new Callable<ImageView>() {
-//            @Override
-//            public ImageView call() throws Exception {
-//                ImageView imageView = ImageViewBuilder.create()
-//                        .image(new Image(urlPathToImage))
-//                        .build();
-//                return imageView;
-//            }
-//        };
-//        Future<ImageView> future = executor.submit(imageViewCallable);
-//        return (ImageView)future;
-
-
+    private void loadImage(String urlPathToImage) {
+        new Thread(new ImageLoader(imageView,urlPathToImage)).start();
     }
 
     public void onClick(String videoURL) {
@@ -81,6 +68,7 @@ public class SearchResultView extends ListCell<String> {
             stage.setScene(new Scene(webView));
             stage.setOnCloseRequest(event1 -> {
                 webView.getEngine().load("");
+                System.out.println("video stream was closed");
             });
             stage.show();
         });

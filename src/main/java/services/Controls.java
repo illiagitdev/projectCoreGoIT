@@ -2,6 +2,7 @@ package services;
 
 import apiConnection.BuildHttpRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.layout.GridPane;
@@ -24,47 +25,68 @@ public class Controls implements IuiElements {
     public void simpleSearch() {
 
         searchButton.setOnMouseClicked(event -> {
-            String str = searchText.getText();
-            // skipp search if no text for empty search
-            if (str.equals("")) {
-                System.out.println("No search text!!!");
-                return;
-            }
-
-            Call call = client.newCall(new Request.Builder().
-                    url(BuildHttpRequest.buildHttpUrl(searchText.getText()))
-                    .get()
-                    .build());
-            // asynchronous call
-            call.enqueue(new Callback() {
-                @Override
-                public void onResponse(Call call, Response response) throws IOException {
-                    if (response.isSuccessful() && isSuccess(response)) {
-                        // response from YouTube
-                        ResponseVideoAPI responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<ResponseVideoAPI>() {
-                        });
-
-                        System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + str + ConsoleColors.RESET +
-                                "\nResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
-
-                        //show response in separate text field
-                        showSearchResults(responseYoutube);
-                    }
-                }
-
-                @Override
-                public void onFailure(Call call, IOException e) {
-                    System.out.println("Error:");
-                    System.out.println(e.getStackTrace());
-                }
-            });
+            searchEngine("25");
         });
     }
 
     public void advancedSearch() {
         // advanced search - //todo: write UI and implementation
-        advancedSearchButton.setOnMouseClicked(event -> {
-            System.out.println("on implementation stage");
+        searchButtonAdvanced.setOnMouseClicked(event -> {
+            //todo: test for int value
+            String value1 = isInt(maxRes.getText()) ? maxRes.getText() : "0";
+            String value2 = isInt(daysPublished.getText()) ? daysPublished.getText() : "";
+            System.out.println("on implementation stage" + this.getClass().getSimpleName()
+                    + "\nmaxRes = " + value1 + "\tdaysPublished = " + value2);
+
+            searchEngine(value1);
+        });
+    }
+
+    private boolean isInt(String text) {
+        try {
+            Integer intValue = Integer.valueOf(text);
+        } catch (NumberFormatException e) {
+            System.out.println("not number " + "isInt() from " + this.getClass().getSimpleName());
+            return false;
+        }
+        return true;
+    }
+
+    private void searchEngine(String value1) {
+        String str = searchText.getText();
+        // skipp search if no text for empty search
+        if (str.equals("")) {
+            System.out.println("No search text!!!" + this.getClass().getSimpleName());
+            return;
+        }
+
+        Call call = client.newCall(new Request.Builder().
+                url(BuildHttpRequest.buildHttpUrl(searchText.getText(), value1))
+                .get()
+                .build());
+        // asynchronous call
+        call.enqueue(new Callback() {
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.isSuccessful() && isSuccess(response)) {
+                    // response from YouTube
+                    ResponseVideoAPI responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<ResponseVideoAPI>() {
+                    });
+
+                    System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + str + ConsoleColors.RESET +
+                            "\nResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
+
+                    //show response in separate text field
+
+                    showSearchResults(responseYoutube);
+                }
+            }
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+                System.out.println("Error:");
+                System.out.println(e.getStackTrace());
+            }
         });
     }
 
@@ -76,18 +98,17 @@ public class Controls implements IuiElements {
         List<Items> items = responseYoutube.getItems();
         System.out.println("items.size() = " + items.size() + "\n"
                 + "responseYoutube.getItems().size() = " + responseYoutube.getItems().size() + "\n");
-        for (int i = 0; i < items.size(); i++) {
+        for (Items item : items) {
             result = new SearchResult.Builder()
-                    .setVideoName(items.get(i).getSnippet().getTitle())
-                    .setChannelName(items.get(i).getSnippet().getChannelTitle())
-                    .setPublicationDate(items.get(i).getSnippet().getPublishedAt())
-                    .setUrlID(items.get(i).getId().getVideoId())
-                    .setUrlIDChannel(items.get(i).getId().getChannelId())
-                    .setUrlPathToImage(getFirstUrl(items.get(i).getSnippet().getThumbnails()))
+                    .setVideoName(item.getSnippet().getTitle())
+                    .setChannelName(item.getSnippet().getChannelTitle())
+                    .setPublicationDate(item.getSnippet().getPublishedAt())
+                    .setUrlID(item.getId().getVideoId())
+                    .setUrlIDChannel(item.getId().getChannelId())
+                    .setUrlPathToImage(getFirstUrl(item.getSnippet().getThumbnails()))
                     .build();
             searchResults.add(result);
         }
-//        text.appendText(searchResults.toString());
 
         List<GridPane> sample = new ArrayList<>();
         for (SearchResult searchResult : searchResults) {
@@ -95,26 +116,31 @@ public class Controls implements IuiElements {
         }
 
         ObservableList<GridPane> observableList = FXCollections.observableList(sample);
-        resultsList.setItems(observableList);
+
+        //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
+        Platform.runLater(()->{
+            resultsList.setItems(observableList);
+        });
     }
 
+    //todo: select image to video
     private String getFirstUrl(Thumbnails thumbnails) {
 //        if (!thumbnails.getStandard().getUrl().equals(null)){
 //            return thumbnails.getStandard().getUrl();
 //        }
-        return "https://www.google.com/imgres?imgurl=https%3A%2F%2Fimage.shutterstock.com%2Fimage-vector%2Fcaution-exclamation-mark-white-red-260nw-1055269061.jpg&imgrefurl=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Ferror&tbnid=7zKmiQMMcXw6yM&vet=12ahUKEwizsaqTnfXmAhVPVZoKHQtQCsYQMygAegUIARCAAg..i&docid=IZbA2KT5EihWnM&w=260&h=280&q=error%20image&client=ubuntu&ved=2ahUKEwizsaqTnfXmAhVPVZoKHQtQCsYQMygAegUIARCAAg";
+        return "https://i.ytimg.com/vi/yWpKll3G_a0/default.jpg";
     }
 
     private boolean isSuccess(Response response) {
         int code = response.code();
-        switch (code){
+        switch (code) {
             case 200:
                 return true;
-            case 400:{
+            case 400: {
                 System.out.println("something went wrong");
                 return false;
             }
-            default:{
+            default: {
                 System.out.println("not best result");
                 return false;
             }

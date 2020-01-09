@@ -7,11 +7,7 @@ public class BuildHttpRequest {
     private static final String YOUTUBE_URL = "https://www.youtube.com";
     private static final String KEY = "AIzaSyDsxIyAMEYNxF5s4KqcP2hA0trTYzi5ZaU";
 
-    public static HttpUrl buildHttpUrl(String searchText) {
-        return buildHttpUrl(searchText, "25");
-    }
-
-    private static HttpUrl buildHttpUrl(String searchText, String maxResults) {
+    public static HttpUrl buildHttpUrl(String searchText, String maxResults) {
         HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
                 .addPathSegment("youtube")
                 .addPathSegment("v3")

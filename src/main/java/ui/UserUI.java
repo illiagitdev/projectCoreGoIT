@@ -6,9 +6,13 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 public class UserUI implements IuiElements {
-    private static int clickCount = 0;
+    private static boolean clickCount = false;
 
     public void setupWindow(Stage stage) {
+        stage.setOnCloseRequest(event -> {
+            client.dispatcher().executorService().shutdown();
+            System.out.println("client OkHTTP was closed");
+        });
         //-----------------------------------------------
         // set up main stage
         //-----------------------------------------------
@@ -40,20 +44,21 @@ public class UserUI implements IuiElements {
         advancedSearchButton.setText("Advanced");
 
         VBox searchBoxFull = new VBox(searchBox, searchBoxExtend);
-//        advancedSearchButton.setOnMouseClicked(event -> {
-//            if(clickCount % 2 != 0){
-//                clickCount++;
-//                searchBoxFull.getChildren().remove(2);
-//                System.out.println("without advanced fields");
-//            }else {
-//                searchBoxFull.getChildren().add(searchBoxExtend);
-//                System.out.println("without advanced fields");
-//                clickCount++;
-//            }
-//        });
+
+        searchBoxExtend.setVisible(clickCount);
+        advancedSearchButton.setOnMouseClicked(event -> {
+            clickCount = !clickCount;
+            if(clickCount){
+                searchBoxExtend.setVisible(true);
+                System.out.println("show advanced fields");
+            }else {
+                searchBoxExtend.setVisible(false);
+                System.out.println("hide advanced fields");
+            }
+        });
 
         //* setting search text field
-        searchText.setPrefWidth(stage.getWidth() - 250);
+        searchText.setPrefWidth(stage.getWidth() - 260);
 
 
         searchBoxFull.setSpacing(10);
@@ -65,9 +70,9 @@ public class UserUI implements IuiElements {
                 + "-fx-border-width: 2;" + "-fx-border-insets: 5;"
                 + "-fx-border-radius: 5;" + "-fx-border-color: blue;");
         searchBox.setSpacing(15);
-        searchBox.setPadding(new Insets(10, 10, 5, 10));
+        searchBox.setPadding(new Insets(10, 5, 5, 5));
         searchBoxExtend.setSpacing(15);
-        searchBoxExtend.setPadding(new Insets(5, 10, 5, 10));
+        searchBoxExtend.setPadding(new Insets(5, 5, 5, 5));
 
         // setting up search results box
         resultsList.setPrefWidth(WIDTH - 50);
@@ -83,28 +88,4 @@ public class UserUI implements IuiElements {
 
 //        text.setWrapText(true);
     }
-
-//    public void setupUI(Group root) {
-//
-//        labelMaxRes.setLabelFor(maxRes);
-//        Pane paneHeader = new Pane();
-//        Pane paneHeaderAdv = new Pane();
-//        Pane paneBody = new Pane();
-//
-//        paneHeader.setMaxHeight(75);
-//        paneHeader.setMinHeight(75);
-//
-////        paneHeader.getChildren().addAll(searchBox);
-//
-//        paneHeaderAdv.setMaxHeight(75);
-//        paneHeaderAdv.setMinHeight(75);
-//
-////        paneHeaderAdv.getChildren().addAll(searchBoxFull);
-//
-//        paneBody.setLayoutY(75);
-//        paneBody.getChildren().addAll(text);
-//
-//        root.getChildren().addAll(paneHeader, paneBody);
-//    }
-
 }

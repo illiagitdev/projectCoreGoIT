@@ -2,6 +2,7 @@ package ui;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -33,7 +34,7 @@ public interface IuiElements {
     HBox searchBoxExtend = new HBox(maxRes, daysPublished, searchButtonAdvanced);
 
     // search results
-    ListView resultsList = new ListView();
+    ListView<GridPane> resultsList = new ListView<>();
 //    TextArea text = new TextArea();
     VBox resultsBox = new VBox(/*text, */resultsList);
 
