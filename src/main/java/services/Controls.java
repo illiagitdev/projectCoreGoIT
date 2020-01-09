@@ -11,6 +11,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 import responseAll.ResponseVideoAPI;
 import responseAll.components.Items;
+import responseAll.components.Thumbnails;
 import result.SearchResult;
 import ui.ConsoleColors;
 import ui.IuiElements;
@@ -49,8 +50,6 @@ public class Controls implements IuiElements {
                         //show response in separate text field
                         showSearchResults(responseYoutube);
                     }
-                    // appears exception in dispatcher
-//                    client.dispatcher().executorService().shutdown();
                 }
 
                 @Override
@@ -84,11 +83,11 @@ public class Controls implements IuiElements {
                     .setPublicationDate(items.get(i).getSnippet().getPublishedAt())
                     .setUrlID(items.get(i).getId().getVideoId())
                     .setUrlIDChannel(items.get(i).getId().getChannelId())
+                    .setUrlPathToImage(getFirstUrl(items.get(i).getSnippet().getThumbnails()))
                     .build();
-//        items.get(0).getSnippet().getThumbnails().
             searchResults.add(result);
         }
-        text.appendText(searchResults.toString());
+//        text.appendText(searchResults.toString());
 
         List<GridPane> sample = new ArrayList<>();
         for (SearchResult searchResult : searchResults) {
@@ -99,13 +98,20 @@ public class Controls implements IuiElements {
         resultsList.setItems(observableList);
     }
 
+    private String getFirstUrl(Thumbnails thumbnails) {
+//        if (!thumbnails.getStandard().getUrl().equals(null)){
+//            return thumbnails.getStandard().getUrl();
+//        }
+        return "https://www.google.com/imgres?imgurl=https%3A%2F%2Fimage.shutterstock.com%2Fimage-vector%2Fcaution-exclamation-mark-white-red-260nw-1055269061.jpg&imgrefurl=https%3A%2F%2Fwww.shutterstock.com%2Fsearch%2Ferror&tbnid=7zKmiQMMcXw6yM&vet=12ahUKEwizsaqTnfXmAhVPVZoKHQtQCsYQMygAegUIARCAAg..i&docid=IZbA2KT5EihWnM&w=260&h=280&q=error%20image&client=ubuntu&ved=2ahUKEwizsaqTnfXmAhVPVZoKHQtQCsYQMygAegUIARCAAg";
+    }
+
     private boolean isSuccess(Response response) {
         int code = response.code();
         switch (code){
             case 200:
                 return true;
             case 400:{
-                System.out.println("something went wrond");
+                System.out.println("something went wrong");
                 return false;
             }
             default:{

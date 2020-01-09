@@ -8,36 +8,39 @@ public class BuildHttpRequest {
     private static final String KEY = "AIzaSyDsxIyAMEYNxF5s4KqcP2hA0trTYzi5ZaU";
 
     public static HttpUrl buildHttpUrl(String searchText) {
-        return buildHttpUrl(searchText , "25");
+        return buildHttpUrl(searchText, "25");
     }
 
     private static HttpUrl buildHttpUrl(String searchText, String maxResults) {
-        return HttpUrl.parse(ROOT_URL).newBuilder()
+        HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
                 .addPathSegment("youtube")
                 .addPathSegment("v3")
                 .addPathSegment("search")
-                .addQueryParameter("part","snippet")
+                .addQueryParameter("part", "snippet")
                 .addQueryParameter("maxResults", maxResults)
                 .addQueryParameter("q", searchText)
                 .addQueryParameter("key", KEY)
                 .build();
+        System.out.println(httpUrl + " BuildHttpRequest.buildHttpUrl ");
+        return httpUrl;
     }
 
     public static HttpUrl buildChannelHttpUrl(String channelID) {
-        return HttpUrl.parse(ROOT_URL).newBuilder()
+        HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
                 .addPathSegment("youtube")
                 .addPathSegment("v3")
                 .addPathSegment("channels")
-                .addQueryParameter("part","snippet%contentDetails%statistics")
-                .addQueryParameter("id",channelID)
+                .addQueryParameter("part", "snippet%contentDetails%statistics")
+                .addQueryParameter("id", channelID)
                 .addQueryParameter("MaxResults", "10")
                 .build();
+        System.out.println(httpUrl + " BuildHttpRequest.buildChannelHttpUrl ");
+        return httpUrl;
     }
 
-    public static HttpUrl buildYouTubeWatchUrl(String videoID) {
-        return HttpUrl.parse(YOUTUBE_URL).newBuilder()
-                .addPathSegment("watch")
-                .addQueryParameter("v",videoID)
-                .build();
+    public static String buildYouTubeWatchUrl(String videoID) {
+        String path = YOUTUBE_URL + "/embed/" + videoID + "?autoplay=1";
+        System.out.println(path + " BuildHttpRequest.buildYouTubeWatchUrl ");
+        return path;
     }
 }

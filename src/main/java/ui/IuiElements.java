@@ -9,8 +9,8 @@ import okhttp3.OkHttpClient;
 
 public interface IuiElements {
     //stage settings
-    int HEIGHT = 800;
-    int WIDTH = 950;
+    int HEIGHT = 700;
+    int WIDTH = 850;
 
     ObjectMapper mapper = new ObjectMapper();
     OkHttpClient client = new OkHttpClient();
@@ -34,8 +34,8 @@ public interface IuiElements {
 
     // search results
     ListView resultsList = new ListView();
-    TextArea text = new TextArea();
-    VBox resultsBox = new VBox(text, resultsList);
+//    TextArea text = new TextArea();
+    VBox resultsBox = new VBox(/*text, */resultsList);
 
     Label labelMaxRes = new Label("Max Results");
 }

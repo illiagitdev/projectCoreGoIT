@@ -6,13 +6,19 @@ public class SearchResult {
     private final String publicationDate;
     private final String urlID;
     private final String urlIDChannel;
+    private final String urlPathToImage;
 
-    private SearchResult(String videoName, String channelName, String publicationDate, String urlID, String urlIDChannel) {
+    private SearchResult(String videoName, String channelName, String publicationDate, String urlID, String urlIDChannel, String urlPathToImage) {
         this.videoName = videoName;
         this.channelName = channelName;
         this.publicationDate = publicationDate;
         this.urlID = urlID;
         this.urlIDChannel = urlIDChannel;
+        this.urlPathToImage = urlPathToImage;
+    }
+
+    public String getUrlPathToImage() {
+        return urlPathToImage;
     }
 
     public String getVideoName() {
@@ -41,6 +47,7 @@ public class SearchResult {
         private String publicationDate;
         private String urlID;
         private String urlIDChannel;
+        private String urlPathToImage;
 
         public Builder setVideoName(String videoName) {
             this.videoName = videoName;
@@ -72,12 +79,19 @@ public class SearchResult {
             return this;
         }
 
+        public Builder setUrlPathToImage(String urlPathToImage) {
+            this.urlPathToImage = urlPathToImage;
+
+            return this;
+        }
+
         public SearchResult build(){
             return new SearchResult(videoName,
                     channelName,
                     publicationDate,
                     urlID,
-                    urlIDChannel);
+                    urlIDChannel,
+                    urlPathToImage);
         }
     }
 
@@ -89,6 +103,7 @@ public class SearchResult {
                 ", publicationDate='" + publicationDate + '\'' +
                 ", urlID='" + urlID + '\'' +
                 ", urlIDChannel='" + urlIDChannel + '\'' +
+                ", urlPathToImage='" + urlPathToImage + '\'' +
                 '}';
     }
 }

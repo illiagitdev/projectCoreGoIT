@@ -56,7 +56,7 @@ public class UserUI implements IuiElements {
         searchText.setPrefWidth(stage.getWidth() - 250);
 
 
-        searchBoxFull.setSpacing(15);
+        searchBoxFull.setSpacing(10);
         //-----------------------------------------------
 
         //* setting up search box properties, contain search field and search button + advanced button
@@ -81,7 +81,7 @@ public class UserUI implements IuiElements {
         root.setMaxWidth(scene.getWidth());
         root.getChildren().addAll(searchBoxFull, resultsBox);
 
-        text.setWrapText(true);
+//        text.setWrapText(true);
     }
 
 //    public void setupUI(Group root) {
