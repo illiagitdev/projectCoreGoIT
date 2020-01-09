@@ -29,20 +29,20 @@ public class SearchResultView extends ListCell<String> {
         videoName = new Label(searchResult.getVideoName());
         channelName = new Label(searchResult.getChannelName());
         published = new Label(searchResult.getPublicationDate());
-        imageView = new ImageView();
+        imageView = new ImageView("https://i.ytimg.com/vi/yWpKll3G_a0/default.jpg");
         gridPane = new GridPane();
         urlID = searchResult.getUrlID();
         urlIDChannel = searchResult.getUrlIDChannel();
         // through callable
 //        imageView = loadImage(searchResult.getUrlPathToImage());
         // through runnable
-//        new Thread(new ImageLoader(imageView, searchResult.getUrlPathToImage())).start();
+        new Thread(new ImageLoader(imageView, searchResult.getUrlPathToImage())).start();
 
         onClick(BuildHttpRequest.buildYouTubeWatchUrl(searchResult.getUrlID()));
         loadImage(searchResult.getUrlPathToImage());
 
-        imageView.setFitHeight(10);
-        imageView.setFitWidth(15);
+        imageView.setFitHeight(30);
+        imageView.setFitWidth(45);
         gridPane.add(imageView, 0, 0);
 //        gridPane.add(ImageViewBuilder.create().image(new Image(searchResult.getUrlPathToImage())).build(), 0, 0);
         gridPane.add(view, 1, 0);

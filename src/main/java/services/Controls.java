@@ -20,25 +20,26 @@ import ui.IuiElements;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Controls implements IuiElements {
     public void simpleSearch() {
 
         searchButton.setOnMouseClicked(event -> {
-            searchEngine("25");
+            searchEngine("25", "-1");
         });
     }
 
     public void advancedSearch() {
-        // advanced search - //todo: write UI and implementation
+        // advanced search
         searchButtonAdvanced.setOnMouseClicked(event -> {
-            //todo: test for int value
+            //todo: filter for days
             String value1 = isInt(maxRes.getText()) ? maxRes.getText() : "0";
             String value2 = isInt(daysPublished.getText()) ? daysPublished.getText() : "";
             System.out.println("on implementation stage" + this.getClass().getSimpleName()
                     + "\nmaxRes = " + value1 + "\tdaysPublished = " + value2);
 
-            searchEngine(value1);
+            searchEngine(value1, value2);
         });
     }
 
@@ -52,7 +53,7 @@ public class Controls implements IuiElements {
         return true;
     }
 
-    private void searchEngine(String value1) {
+    private void searchEngine(String value1, String value2) {
         String str = searchText.getText();
         // skipp search if no text for empty search
         if (str.equals("")) {
@@ -78,7 +79,7 @@ public class Controls implements IuiElements {
 
                     //show response in separate text field
 
-                    showSearchResults(responseYoutube);
+                    showSearchResults(responseYoutube, value2);
                 }
             }
 
@@ -91,7 +92,7 @@ public class Controls implements IuiElements {
     }
 
     // get response from click on search button
-    private void showSearchResults(ResponseVideoAPI responseYoutube) {
+    private void showSearchResults(ResponseVideoAPI responseYoutube, String value2) {
         // components from response we need: will be thread safe with internal builder
         List<SearchResult> searchResults = new ArrayList<>();
         SearchResult result;
@@ -109,6 +110,17 @@ public class Controls implements IuiElements {
                     .build();
             searchResults.add(result);
         }
+        if (value2.equals("-1")) {
+            System.out.println("no date defined");
+        }else{
+//            searchResults = searchResults.stream().filter(value->{
+//                //todo: handle filtering by date
+//            value.getPublicationDate();
+//            return true;
+//            }).collect(Collectors.toList());
+            System.out.println("filtered by date");
+
+        }
 
         List<GridPane> sample = new ArrayList<>();
         for (SearchResult searchResult : searchResults) {
@@ -118,15 +130,25 @@ public class Controls implements IuiElements {
         ObservableList<GridPane> observableList = FXCollections.observableList(sample);
 
         //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
-        Platform.runLater(()->{
+        Platform.runLater(() -> {
             resultsList.setItems(observableList);
         });
     }
 
     //todo: select image to video
     private String getFirstUrl(Thumbnails thumbnails) {
-//        if (!thumbnails.getStandard().getUrl().equals(null)){
+//        if (!thumbnails.getStandard().getUrl().equals("")) {
+//            System.out.println("thumbnails.getStandard().getUrl() = " + thumbnails.getStandard().getUrl() +
+//                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
 //            return thumbnails.getStandard().getUrl();
+//        } else if (!thumbnails.getRandom().getUrl().equals("")) {
+//            System.out.println("thumbnails.getStandard().getUrl() = " + thumbnails.getRandom().getUrl() +
+//                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+//            return thumbnails.getRandom().getUrl();
+//        } else if (!thumbnails.getMedium().getUrl().equals("")) {
+//            System.out.println("thumbnails.getStandard().getUrl() = " + thumbnails.getMedium().getUrl() +
+//                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+//            return thumbnails.getMedium().getUrl();
 //        }
         return "https://i.ytimg.com/vi/yWpKll3G_a0/default.jpg";
     }
