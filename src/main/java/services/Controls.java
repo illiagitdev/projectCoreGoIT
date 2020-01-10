@@ -20,10 +20,12 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class Controls implements IuiElements {
     private static HttpUrl http;
+
     public void simpleSearch() {
         searchButton.setOnMouseClicked(event -> {
             String str = searchText.getText();
@@ -47,13 +49,13 @@ public class Controls implements IuiElements {
             }
 
             String value1 = maxRes.getText();
-            if (!isPositiveInteger(value1)){
+            if (!isPositiveInteger(value1)) {
                 System.out.println("No maxRes defined!!!" + this.getClass().getSimpleName());
                 return;
             }
 
             String value2 = daysPublished.getText();
-            if (!isPositiveInteger(value2)){
+            if (!isPositiveInteger(value2)) {
                 System.out.println("No daysPublished defined!!!" + this.getClass().getSimpleName());
                 return;
             }
@@ -71,16 +73,16 @@ public class Controls implements IuiElements {
     }
 
     private boolean isPositiveInteger(String text) {
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             return false;
         }
         for (int i = 0; i < text.length(); i++) {
-            if(i == 0 && text.charAt(i) == '-'){
-                if(text.length() == 1){
+            if (i == 0 && text.charAt(i) == '-') {
+                if (text.length() == 1) {
                     return false;
                 }
             }
-            if(Character.digit(text.charAt(i), 10) < 0){
+            if (Character.digit(text.charAt(i), 10) < 0) {
                 return false;
             }
         }
@@ -98,6 +100,7 @@ public class Controls implements IuiElements {
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.isSuccessful() && isSuccess(response)) {
                     // response from YouTube
+                    assert response.body() != null : "response.body() = null";
                     ResponseVideoAPI responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<ResponseVideoAPI>() {
                     });
 
@@ -111,7 +114,7 @@ public class Controls implements IuiElements {
             @Override
             public void onFailure(Call call, IOException e) {
                 System.out.println("Error:");
-                System.out.println(e.getStackTrace());
+                System.out.println(Arrays.toString(e.getStackTrace()));
             }
         });
     }
@@ -149,21 +152,34 @@ public class Controls implements IuiElements {
         });
     }
 
-    //todo: select image to video
     private String getFirstUrl(Thumbnails thumbnails) {
-//        if (!thumbnails.getStandard().getUrl().equals("")) {
-//            System.out.println("thumbnails.getStandard().getUrl() = " + thumbnails.getStandard().getUrl() +
-//                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
-//            return thumbnails.getStandard().getUrl();
-//        } else if (!thumbnails.getRandom().getUrl().equals("")) {
-//            System.out.println("thumbnails.getStandard().getUrl() = " + thumbnails.getRandom().getUrl() +
-//                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
-//            return thumbnails.getRandom().getUrl();
-//        } else if (!thumbnails.getMedium().getUrl().equals("")) {
-//            System.out.println("thumbnails.getStandard().getUrl() = " + thumbnails.getMedium().getUrl() +
-//                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
-//            return thumbnails.getMedium().getUrl();
-//        }
+        String url = "";
+        if (thumbnails.getRandom() != null) {
+            url = thumbnails.getRandom().getUrl();
+            System.out.println("thumbnails.getStandard().getUrl() = " + url +
+                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+            return url;
+        } else if (thumbnails.getMedium() != null) {
+            url = thumbnails.getMedium().getUrl();
+            System.out.println("thumbnails.getStandard().getUrl() = " +url +
+                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+            return url;
+        } else if (thumbnails.getStandard() != null) {
+            url = thumbnails.getStandard().getUrl();
+            System.out.println("thumbnails.getStandard().getUrl() = " + url +
+                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+            return url;
+        } else if (thumbnails.getHigh() != null) {
+            url = thumbnails.getHigh().getUrl();
+            System.out.println("thumbnails.getStandard().getUrl() = " + url +
+                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+            return url;
+        } else if (thumbnails.getMaxres() != null) {
+            url = thumbnails.getMaxres().getUrl();
+            System.out.println("thumbnails.getStandard().getUrl() = " + url +
+                    " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
+            return url;
+        }
         return "https://i.ytimg.com/vi/yWpKll3G_a0/default.jpg";
     }
 

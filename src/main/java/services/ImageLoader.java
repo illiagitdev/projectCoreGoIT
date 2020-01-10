@@ -1,8 +1,8 @@
 package services;
 
+import javafx.application.Platform;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.image.ImageViewBuilder;
 
 public class ImageLoader implements Runnable {
     private ImageView imageView;
@@ -15,9 +15,10 @@ public class ImageLoader implements Runnable {
 
     @Override
     public void run() {
+        Image image=new Image(urlPathToImage);
+        Platform.runLater(()->{
+            imageView.setImage(image );
+        });
 
-        imageView = ImageViewBuilder.create()
-                .image(new Image(urlPathToImage))
-                .build();
     }
 }
