@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import okhttp3.OkHttpClient;
 
-public interface IuiElements {
+public interface UIElements {
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     //stage settings
@@ -28,17 +28,12 @@ public interface IuiElements {
 
 
     //advanced components
-    Label maxResLabel = new Label("Max Results");
     TextField maxRes = new TextField();
-    Label daysPublishedLabel = new Label("Days published");
     TextField daysPublished = new TextField();
     Button searchButtonAdvanced = new Button("Search");
     HBox searchBoxExtend = new HBox(maxRes, daysPublished, searchButtonAdvanced);
 
     // search results
     ListView<GridPane> resultsList = new ListView<>();
-//    TextArea text = new TextArea();
     VBox resultsBox = new VBox(/*text, */resultsList);
-
-    Label labelMaxRes = new Label("Max Results");
 }

@@ -2,7 +2,7 @@ package apiConnection;
 
 import okhttp3.HttpUrl;
 
-public class BuildHttpRequest {
+public class HttpUrlBuider {
     private static final String ROOT_URL = "https://www.googleapis.com";
     private static final String YOUTUBE_URL = "https://www.youtube.com";
     private static final String KEY = "AIzaSyDsxIyAMEYNxF5s4KqcP2hA0trTYzi5ZaU";

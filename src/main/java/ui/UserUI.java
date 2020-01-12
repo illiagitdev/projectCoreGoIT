@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class UserUI implements IuiElements {
+public class UserUI implements UIElements {
     private static boolean clickCount = false;
 
     public void setupWindow(Stage stage) {
@@ -85,7 +85,5 @@ public class UserUI implements IuiElements {
         root.setPrefWidth(scene.getWidth());
         root.setMaxWidth(scene.getWidth());
         root.getChildren().addAll(searchBoxFull, resultsBox);
-
-//        text.setWrapText(true);
     }
 }

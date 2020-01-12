@@ -14,7 +14,6 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
-        //will do everything with main screen
         Operational operational = new Operational();
         operational.run(primaryStage);
 

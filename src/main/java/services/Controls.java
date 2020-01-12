@@ -1,6 +1,6 @@
 package services;
 
-import apiConnection.BuildHttpRequest;
+import apiConnection.HttpUrlBuider;
 import com.fasterxml.jackson.core.type.TypeReference;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -12,7 +12,7 @@ import responseAll.components.Items;
 import responseAll.components.Thumbnails;
 import result.SearchResult;
 import ui.ConsoleColors;
-import ui.IuiElements;
+import ui.UIElements;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -23,7 +23,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Controls implements IuiElements {
+public class Controls implements UIElements {
     private static HttpUrl http;
 
     public void simpleSearch() {
@@ -34,7 +34,7 @@ public class Controls implements IuiElements {
                 System.out.println("No search text!!!" + this.getClass().getSimpleName());
                 return;
             }
-            http = BuildHttpRequest.buildHttpUrl(searchText.getText());
+            http = HttpUrlBuider.buildHttpUrl(searchText.getText());
             searchEngine(http);
         });
     }
@@ -67,7 +67,7 @@ public class Controls implements IuiElements {
             System.out.println("on implementation stage" + this.getClass().getSimpleName()
                     + "\nmaxRes = " + value1 + "\tdaysPublished = " + value2 + " : " + publishedAfter);
 
-            http = BuildHttpRequest.buildHttpUrl(searchText.getText(), value1, publishedAfter);
+            http = HttpUrlBuider.buildHttpUrl(searchText.getText(), value1, publishedAfter);
             searchEngine(http);
         });
     }
@@ -147,13 +147,11 @@ public class Controls implements IuiElements {
         ObservableList<GridPane> observableList = FXCollections.observableList(sample);
 
         //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
-        Platform.runLater(() -> {
-            resultsList.setItems(observableList);
-        });
+        Platform.runLater(() -> resultsList.setItems(observableList));
     }
 
     private String getFirstUrl(Thumbnails thumbnails) {
-        String url = "";
+        String url;
         if (thumbnails.getRandom() != null) {
             url = thumbnails.getRandom().getUrl();
             System.out.println("thumbnails.getStandard().getUrl() = " + url +

@@ -1,6 +1,6 @@
 package services;
 
-import apiConnection.BuildHttpRequest;
+import apiConnection.HttpUrlBuider;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -34,7 +34,7 @@ public class SearchResultView extends ListCell<String> {
         urlIDChannel = searchResult.getUrlIDChannel();
         channelNameActions(urlIDChannel);
 
-        onClick(BuildHttpRequest.buildYouTubeWatchUrl(searchResult.getUrlID()));
+        onClick(HttpUrlBuider.buildYouTubeWatchUrl(searchResult.getUrlID()));
 
         imageView.setFitHeight(30);
         imageView.setFitWidth(45);
