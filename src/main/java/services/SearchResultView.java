@@ -26,11 +26,13 @@ public class SearchResultView extends ListCell<String> {
         view = new Button("View");
         videoName = new Label(searchResult.getVideoName());
         channelName = new Label(searchResult.getChannelName());
+        channelName.setStyle("-fx-font-weight: bold;");
         published = new Label(searchResult.getPublicationDate());
-        imageView = new ImageView();//"https://i.ytimg.com/vi/yWpKll3G_a0/default.jpg");
+        imageView = new ImageView();
         gridPane = new GridPane();
         urlID = searchResult.getUrlID();
         urlIDChannel = searchResult.getUrlIDChannel();
+        channelNameActions(urlIDChannel);
 
         onClick(BuildHttpRequest.buildYouTubeWatchUrl(searchResult.getUrlID()));
 
@@ -43,6 +45,17 @@ public class SearchResultView extends ListCell<String> {
         gridPane.add(published, 4, 0);
 
         loadImage(searchResult.getUrlPathToImage());
+    }
+
+    private void channelNameActions(String urlIDChannel) {
+        channelName.setOnMouseClicked(event -> {
+            Stage stage = new Stage();
+            stage.setTitle(String.valueOf(channelName));
+            stage.initModality(Modality.APPLICATION_MODAL);
+            Scene scene = new Scene(new ChannelView().newChannelPane());
+            stage.setScene(scene);
+            stage.setOnCloseRequest(event1 -> System.out.println("Channel watch terminated!"));
+        });
     }
 
     private void loadImage(String urlPathToImage) {
@@ -69,6 +82,11 @@ public class SearchResultView extends ListCell<String> {
         });
     }
 
+    public GridPane newList() {
+        gridPane.setHgap(15);
+        return gridPane;
+    }
+
     @Override
     protected void updateItem(String item, boolean empty) {
         super.updateItem(item, empty);
@@ -78,10 +96,5 @@ public class SearchResultView extends ListCell<String> {
         } else {
             setGraphic(null);
         }
-    }
-
-    public GridPane newList() {
-        gridPane.setHgap(15);
-        return gridPane;
     }
 }
