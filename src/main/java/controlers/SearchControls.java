@@ -13,7 +13,7 @@ import responseAll.components.Thumbnails;
 import result.SearchResult;
 import services.SearchResultView;
 import ui.ConsoleColors;
-import ui.IuiElements;
+import ui.UIElements;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchControls implements IuiElements {
+public class SearchControls implements UIElements {
     private static HttpUrl http;
 
     public void simpleSearch() {

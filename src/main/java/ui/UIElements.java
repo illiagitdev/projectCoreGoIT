@@ -8,7 +8,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import okhttp3.OkHttpClient;
 
-public interface IuiElements {
+public interface UIElements {
     String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     //stage settings

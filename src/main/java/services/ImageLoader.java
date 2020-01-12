@@ -16,9 +16,6 @@ public class ImageLoader implements Runnable {
     @Override
     public void run() {
         Image image=new Image(urlPathToImage);
-        Platform.runLater(()->{
-            imageView.setImage(image );
-        });
-
+        Platform.runLater(()-> imageView.setImage(image ));
     }
 }
