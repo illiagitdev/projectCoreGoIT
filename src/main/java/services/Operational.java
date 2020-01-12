@@ -1,17 +1,20 @@
 package services;
 
+import controlers.SearchControls;
 import javafx.stage.Stage;
-import ui.UserUI;
+import ui.WindowUI;
 
 public class Operational {
 
     public void run(Stage primaryStage) {
+        Stage window = primaryStage;
+        Stage channelWindow;
         // configure iu: all things on main screen
-        UserUI userUI = new UserUI();
+        WindowUI userUI = new WindowUI();
 
-        userUI.setupWindow(primaryStage);
+        userUI.setupWindow(window);
 
-        Controls controls = new Controls();
+        SearchControls controls = new SearchControls();
         controls.simpleSearch();
         controls.advancedSearch();
     }

@@ -1,4 +1,4 @@
-package services;
+package controlers;
 
 import apiConnection.BuildHttpRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -11,6 +11,7 @@ import responseAll.ResponseVideoAPI;
 import responseAll.components.Items;
 import responseAll.components.Thumbnails;
 import result.SearchResult;
+import services.SearchResultView;
 import ui.ConsoleColors;
 import ui.IuiElements;
 
@@ -23,7 +24,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Controls implements IuiElements {
+public class SearchControls implements IuiElements {
     private static HttpUrl http;
 
     public void simpleSearch() {
@@ -107,7 +108,7 @@ public class Controls implements IuiElements {
                     System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + searchText.getText() + ConsoleColors.RESET +
                             "\nResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
 
-                    showSearchResults(responseYoutube);
+                    returnSearchResults(responseYoutube);
                 }
             }
 
@@ -120,7 +121,7 @@ public class Controls implements IuiElements {
     }
 
     // get response from click on search button
-    private void showSearchResults(ResponseVideoAPI responseYoutube) {
+    private void returnSearchResults(ResponseVideoAPI responseYoutube) {
         // components from response we need: will be thread safe with internal builder
         List<SearchResult> searchResults = new ArrayList<>();
         SearchResult result;
@@ -153,7 +154,7 @@ public class Controls implements IuiElements {
     }
 
     private String getFirstUrl(Thumbnails thumbnails) {
-        String url = "";
+        String url;
         if (thumbnails.getRandom() != null) {
             url = thumbnails.getRandom().getUrl();
             System.out.println("thumbnails.getStandard().getUrl() = " + url +

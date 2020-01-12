@@ -1,6 +1,7 @@
 package services;
 
 import apiConnection.BuildHttpRequest;
+import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -43,6 +44,9 @@ public class SearchResultView extends ListCell<String> {
         gridPane.add(videoName, 2, 0);
         gridPane.add(channelName, 3, 0);
         gridPane.add(published, 4, 0);
+        gridPane.setHgap(10);
+        gridPane.setVgap(8);
+        gridPane.setPadding(new Insets(10, 10, 10, 10));
 
         loadImage(searchResult.getUrlPathToImage());
     }

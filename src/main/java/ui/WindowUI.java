@@ -5,7 +5,7 @@ import javafx.scene.Scene;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
-public class UserUI implements IuiElements {
+public class WindowUI implements IuiElements {
     private static boolean clickCount = false;
 
     public void setupWindow(Stage stage) {

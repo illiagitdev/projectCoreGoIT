@@ -18,6 +18,9 @@ public interface IuiElements {
     ObjectMapper mapper = new ObjectMapper();
     OkHttpClient client = new OkHttpClient();
 
+
+
+
     Pane root = new Pane();
 
     //search set
@@ -39,6 +42,4 @@ public interface IuiElements {
     ListView<GridPane> resultsList = new ListView<>();
 //    TextArea text = new TextArea();
     VBox resultsBox = new VBox(/*text, */resultsList);
-
-    Label labelMaxRes = new Label("Max Results");
 }

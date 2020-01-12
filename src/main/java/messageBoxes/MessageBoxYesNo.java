@@ -28,13 +28,13 @@ public class MessageBoxYesNo {
 
         yesButton.setOnMouseClicked(e -> {
             status = true;
-            System.out.println(message + ": " + status);
+            System.out.println(message + ": " + "true");
             window.close();
         });
 
         noButton.setOnMouseClicked(e -> {
             status = false;
-            System.out.println(message + ": " + status);
+            System.out.println(message + ": " + "false");
             window.close();
         });
 
