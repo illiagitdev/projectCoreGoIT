@@ -1,4 +1,4 @@
-package services;
+package ui;
 
 import apiConnection.BuildHttpRequest;
 import javafx.geometry.Insets;
@@ -11,6 +11,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import result.ImageLoader;
 import result.SearchResult;
 
 public class SearchResultView extends ListCell<String> {

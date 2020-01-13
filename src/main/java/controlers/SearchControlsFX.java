@@ -14,7 +14,7 @@ import responseAll.ResponseVideoAPI;
 import responseAll.components.Items;
 import responseAll.components.Thumbnails;
 import result.SearchResult;
-import services.SearchResultView;
+import ui.SearchResultView;
 import ui.ConsoleColors;
 
 import java.io.IOException;
@@ -152,7 +152,6 @@ public class SearchControlsFX {
             }
         });
     }
-
 
     private String getFirstUrl(Thumbnails thumbnails) {
         String url;

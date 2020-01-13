@@ -1,4 +1,4 @@
-package services;
+package result;
 
 import javafx.application.Platform;
 import javafx.scene.image.Image;

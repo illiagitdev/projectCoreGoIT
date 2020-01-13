@@ -39,7 +39,9 @@ public class SearchLayoutFX {
         advanced.setMaxWidth(100);
         advanced.setText("Advanced");
 
+        //todo: read other languages when do search
         searchText.setPrefWidth(300);
+        searchText.setPromptText("enter search text");
 
         searchBox.setSpacing(15);
         searchBox.setPadding(new Insets(10, 5, 5, 5));
@@ -48,7 +50,9 @@ public class SearchLayoutFX {
         searchAdvanced.setMaxWidth(75);
 
         maxRes.setPrefWidth(142);
+        maxRes.setPromptText("positive number");
         daysPublished.setPrefWidth(142);
+        daysPublished.setPromptText("positive number");
 
         searchBoxExtend.setSpacing(15);
         searchBoxExtend.setPadding(new Insets(5, 5, 5, 5));
@@ -63,16 +67,6 @@ public class SearchLayoutFX {
         result.getChildren().addAll(searchBox, searchBoxExtend);
 
         searchBoxExtend.setVisible(clickCount);
-        advanced.setOnMouseClicked(event -> {
-            clickCount = !clickCount;
-            if(clickCount){
-                searchBoxExtend.setVisible(true);
-                System.out.println("show advanced fields");
-            }else {
-                searchBoxExtend.setVisible(false);
-                System.out.println("hide advanced fields");
-            }
-        });
     }
 
     public Button getSearch() {
