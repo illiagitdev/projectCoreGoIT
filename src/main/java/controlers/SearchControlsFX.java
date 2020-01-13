@@ -2,10 +2,13 @@ package controlers;
 
 import apiConnection.BuildHttpRequest;
 import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.scene.control.ListView;
 import javafx.scene.layout.GridPane;
+import messageBoxes.AlertBox;
 import okhttp3.*;
 import responseAll.ResponseVideoAPI;
 import responseAll.components.Items;
@@ -13,7 +16,6 @@ import responseAll.components.Thumbnails;
 import result.SearchResult;
 import services.SearchResultView;
 import ui.ConsoleColors;
-import ui.UIElements;
 
 import java.io.IOException;
 import java.time.LocalDate;
@@ -24,53 +26,57 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchControls implements UIElements {
-    private static HttpUrl http;
+public class SearchControlsFX {
+    private static final OkHttpClient client = new OkHttpClient();
 
-    public void simpleSearch() {
-        searchButton.setOnMouseClicked(event -> {
-            String str = searchText.getText();
-            // skipp search if no text for empty search
-            if (str.isEmpty()) {
-                System.out.println("No search text!!!" + this.getClass().getSimpleName());
-                return;
-            }
-            http = BuildHttpRequest.buildHttpUrl(searchText.getText());
-            searchEngine(http);
-        });
+    private static HttpUrl http;
+    private static ObjectMapper mapper = new ObjectMapper();
+    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    public static OkHttpClient getClient() {
+        return client;
     }
 
-    public void advancedSearch() {
-        searchButtonAdvanced.setOnMouseClicked(event -> {
-            String str = searchText.getText();
+    public void simpleSearch(String searchText, ListView<GridPane> listView) {
+        // skipp search if no text for empty search
+        if (searchText.isEmpty()) {
+            System.out.println("No search text!!!" + this.getClass().getSimpleName());
+            return;
+        }
+        System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + searchText + ConsoleColors.RESET);
+        http = BuildHttpRequest.buildHttpUrl(searchText);
+        searchEngine(http, listView);
+    }
+
+    public void advancedSearch(String searchText, String maxRes, String daysPublished, ListView<GridPane> resultsList) {
             // skipp search if no text for empty search
-            if (str.isEmpty()) {
+            if (searchText.isEmpty()) {
                 System.out.println("No search text!!!" + this.getClass().getSimpleName());
+                AlertBox.display("Search text", "There is no text in search field!");
                 return;
             }
 
-            String value1 = maxRes.getText();
-            if (!isPositiveInteger(value1)) {
+            if (!isPositiveInteger(maxRes)) {
                 System.out.println("No maxRes defined!!!" + this.getClass().getSimpleName());
+                AlertBox.display("Max Results", "Max results not indicated!");
                 return;
             }
 
-            String value2 = daysPublished.getText();
-            if (!isPositiveInteger(value2)) {
+            if (!isPositiveInteger(daysPublished)) {
                 System.out.println("No daysPublished defined!!!" + this.getClass().getSimpleName());
+                AlertBox.display("Days published", "Days published not indicated!");
                 return;
             }
 
-            LocalDate newDate = LocalDate.now().minusDays(Integer.valueOf(value2));
+            LocalDate newDate = LocalDate.now().minusDays(Integer.parseInt(daysPublished));
             LocalDateTime seekingDate = LocalDateTime.of(newDate, LocalTime.MIDNIGHT);
             String publishedAfter = seekingDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
 
             System.out.println("on implementation stage" + this.getClass().getSimpleName()
-                    + "\nmaxRes = " + value1 + "\tdaysPublished = " + value2 + " : " + publishedAfter);
+                    + "\nmaxRes = " + maxRes + "\tdaysPublished = " + daysPublished + " : " + publishedAfter);
 
-            http = BuildHttpRequest.buildHttpUrl(searchText.getText(), value1, publishedAfter);
-            searchEngine(http);
-        });
+            http = BuildHttpRequest.buildHttpUrl(searchText, maxRes, publishedAfter);
+            searchEngine(http, resultsList);
     }
 
     private boolean isPositiveInteger(String text) {
@@ -90,7 +96,7 @@ public class SearchControls implements UIElements {
         return true;
     }
 
-    private void searchEngine(HttpUrl http) {
+    private void searchEngine(HttpUrl http, ListView<GridPane> listView) {
         Call call = client.newCall(new Request.Builder().
                 url(http)
                 .get()
@@ -104,11 +110,38 @@ public class SearchControls implements UIElements {
                     assert response.body() != null : "response.body() = null";
                     ResponseVideoAPI responseYoutube = mapper.readValue(response.body().bytes(), new TypeReference<ResponseVideoAPI>() {
                     });
+                    System.out.println("Response code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
 
-                    System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + searchText.getText() + ConsoleColors.RESET +
-                            "\nResponse code: " + ConsoleColors.RED_BOLD_BRIGHT + response.code() + ConsoleColors.RESET + "\n");
+                    // components from response we need: will be thread safe with internal builder
+                    List<SearchResult> searchResults = new ArrayList<>();
+                    System.out.println("ResponseYoutube.getItems().size() = " + responseYoutube.getItems().size() + "\n");
+                    SearchResult result;
 
-                    returnSearchResults(responseYoutube);
+                    for (Items item : responseYoutube.getItems()) {
+                        if (item.getId().getVideoId() != null) {
+                            result = new SearchResult.Builder()
+                                    .setVideoName(item.getSnippet().getTitle())
+                                    .setChannelName(item.getSnippet().getChannelTitle())
+                                    .setPublicationDate(item.getSnippet().getPublishedAt())
+                                    .setUrlID(item.getId().getVideoId())
+                                    .setUrlIDChannel(item.getId().getChannelId())
+                                    .setUrlPathToImage(getFirstUrl(item.getSnippet().getThumbnails()))
+                                    .build();
+                            searchResults.add(result);
+                        }
+                    }
+
+                    List<GridPane> sample = new ArrayList<>();
+                    for (SearchResult searchResult : searchResults) {
+                        sample.add(new SearchResultView(searchResult).newList());
+                    }
+
+                    ObservableList<GridPane> observableList = FXCollections.observableList(sample);
+
+                    //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
+                    Platform.runLater(() -> {
+                        listView.setItems(observableList);
+                    });
                 }
             }
 
@@ -120,38 +153,6 @@ public class SearchControls implements UIElements {
         });
     }
 
-    // get response from click on search button
-    private void returnSearchResults(ResponseVideoAPI responseYoutube) {
-        // components from response we need: will be thread safe with internal builder
-        List<SearchResult> searchResults = new ArrayList<>();
-        SearchResult result;
-        List<Items> items = responseYoutube.getItems();
-        System.out.println("items.size() = " + items.size() + "\n"
-                + "responseYoutube.getItems().size() = " + responseYoutube.getItems().size() + "\n");
-        for (Items item : items) {
-            result = new SearchResult.Builder()
-                    .setVideoName(item.getSnippet().getTitle())
-                    .setChannelName(item.getSnippet().getChannelTitle())
-                    .setPublicationDate(item.getSnippet().getPublishedAt())
-                    .setUrlID(item.getId().getVideoId())
-                    .setUrlIDChannel(item.getId().getChannelId())
-                    .setUrlPathToImage(getFirstUrl(item.getSnippet().getThumbnails()))
-                    .build();
-            searchResults.add(result);
-        }
-
-        List<GridPane> sample = new ArrayList<>();
-        for (SearchResult searchResult : searchResults) {
-            sample.add(new SearchResultView(searchResult).newList());
-        }
-
-        ObservableList<GridPane> observableList = FXCollections.observableList(sample);
-
-        //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
-        Platform.runLater(() -> {
-            resultsList.setItems(observableList);
-        });
-    }
 
     private String getFirstUrl(Thumbnails thumbnails) {
         String url;
@@ -162,7 +163,7 @@ public class SearchControls implements UIElements {
             return url;
         } else if (thumbnails.getMedium() != null) {
             url = thumbnails.getMedium().getUrl();
-            System.out.println("thumbnails.getStandard().getUrl() = " +url +
+            System.out.println("thumbnails.getStandard().getUrl() = " + url +
                     " || getFirstUrl: " + thumbnails.getClass().getSimpleName());
             return url;
         } else if (thumbnails.getStandard() != null) {

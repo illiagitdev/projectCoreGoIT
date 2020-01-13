@@ -25,21 +25,18 @@ public class MessageBoxYesNo {
         layout.setAlignment(Pos.CENTER);
 
         Scene scene = new Scene(layout);
-
-        yesButton.setOnMouseClicked(e -> {
-            status = true;
-            System.out.println(message + ": " + "true");
-            window.close();
-        });
-
-        noButton.setOnMouseClicked(e -> {
-            status = false;
-            System.out.println(message + ": " + "false");
-            window.close();
-        });
-
         window.setScene(scene);
         window.show();
+
+        yesButton.setOnAction(e -> {
+            status = true;
+            window.close();
+        });
+
+        noButton.setOnAction(e -> {
+            status = false;
+            window.close();
+        });
 
         return status;
     }

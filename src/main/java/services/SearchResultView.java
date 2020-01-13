@@ -18,9 +18,7 @@ public class SearchResultView extends ListCell<String> {
     private GridPane gridPane;
     private Label videoName;
     private Label channelName;
-    private Label published;
     private ImageView imageView;
-    private String urlID;
     private String urlIDChannel;
 
     public SearchResultView(SearchResult searchResult) {
@@ -28,10 +26,10 @@ public class SearchResultView extends ListCell<String> {
         videoName = new Label(searchResult.getVideoName());
         channelName = new Label(searchResult.getChannelName());
         channelName.setStyle("-fx-font-weight: bold;");
-        published = new Label(searchResult.getPublicationDate());
+        Label published = new Label(searchResult.getPublicationDate());
         imageView = new ImageView();
         gridPane = new GridPane();
-        urlID = searchResult.getUrlID();
+        String urlID = searchResult.getUrlID();
         urlIDChannel = searchResult.getUrlIDChannel();
         channelNameActions(urlIDChannel);
 
@@ -47,6 +45,8 @@ public class SearchResultView extends ListCell<String> {
         gridPane.setHgap(10);
         gridPane.setVgap(8);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
+
+
 
         loadImage(searchResult.getUrlPathToImage());
     }
