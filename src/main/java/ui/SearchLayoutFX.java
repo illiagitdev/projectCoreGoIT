@@ -39,7 +39,6 @@ public class SearchLayoutFX {
         advanced.setMaxWidth(100);
         advanced.setText("Advanced");
 
-        //todo: read other languages when do search
         searchText.setPrefWidth(300);
         searchText.setPromptText("enter search text");
 
@@ -67,6 +66,16 @@ public class SearchLayoutFX {
         result.getChildren().addAll(searchBox, searchBoxExtend);
 
         searchBoxExtend.setVisible(clickCount);
+        advanced.setOnMouseClicked(event -> {
+            clickCount = !clickCount;
+            if (clickCount) {
+                searchBoxExtend.setVisible(true);
+                System.out.println("show advanced fields");
+            } else {
+                searchBoxExtend.setVisible(false);
+                System.out.println("hide advanced fields");
+            }
+        });
     }
 
     public Button getSearch() {
@@ -90,17 +99,6 @@ public class SearchLayoutFX {
     }
 
     public VBox searchPanel() {
-        searchBoxExtend.setVisible(clickCount);
-        advanced.setOnMouseClicked(event -> {
-            clickCount = !clickCount;
-            if (clickCount) {
-                searchBoxExtend.setVisible(true);
-                System.out.println("show advanced fields");
-            } else {
-                searchBoxExtend.setVisible(false);
-                System.out.println("hide advanced fields");
-            }
-        });
-        return result;
+        return this.result;
     }
 }

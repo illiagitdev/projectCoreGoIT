@@ -2,6 +2,7 @@ package services;
 
 import controlers.SearchControlsFX;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
@@ -16,14 +17,15 @@ public class OperationalFX {
 
 
     public void run(Stage window) {
-        //todo: scenes to switch if channel is implemented
+        setupStage(window);
+//todo: scenes to switch if channel is implemented
         Scene mainScene, channelScene;
 
         // version 0.0.2
         SearchLayoutFX searchLayout = new SearchLayoutFX();
         ResultsOutputLayoutFX searchView = new ResultsOutputLayoutFX(WIDTH, HEIGHT, 110);
         VBox layout1 = new VBox();
-        layout1.getChildren().addAll(searchLayout.searchPanel(), searchView.getResultsBox());
+        layout1.getChildren().addAll(searchLayout.searchPanel());//, searchView.getResultsBox());
 
         Pane pane1 = new Pane();
         pane1.getChildren().add(layout1);
@@ -31,7 +33,6 @@ public class OperationalFX {
 
         // configure iu: all things on main screen
         window.setScene(mainScene);
-        setupStage(window);
 
         // butons functionality
         searchLayout.getSearch().setOnMouseClicked(e -> controls.simpleSearch(searchLayout.getSearchText().getText(),
