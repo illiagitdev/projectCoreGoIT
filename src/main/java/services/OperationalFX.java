@@ -25,7 +25,7 @@ public class OperationalFX {
         SearchLayoutFX searchLayout = new SearchLayoutFX();
         ResultsOutputLayoutFX searchView = new ResultsOutputLayoutFX(WIDTH, HEIGHT, 110);
         VBox layout1 = new VBox();
-        layout1.getChildren().addAll(searchLayout.searchPanel());//, searchView.getResultsBox());
+        layout1.getChildren().addAll(searchLayout.searchPanel(), searchView.getResultsBox());
 
         Pane pane1 = new Pane();
         pane1.getChildren().add(layout1);
@@ -34,7 +34,7 @@ public class OperationalFX {
         // configure iu: all things on main screen
         window.setScene(mainScene);
 
-        // butons functionality
+        // buttons functionality
         searchLayout.getSearch().setOnMouseClicked(e -> controls.simpleSearch(searchLayout.getSearchText().getText(),
                 searchView.getResultsList()));
 
@@ -53,11 +53,12 @@ public class OperationalFX {
         ResultsOutputLayoutFX channelView = new ResultsOutputLayoutFX(WIDTH, HEIGHT, 210);
 
         VBox layout2 = new VBox();
-        layout2.getChildren().addAll(searchLayout.searchPanel(), channelLayout.newChannelPane(), channelView.getResultsBox());
+        // here search window no more accessible if added to second layout
+//        layout2.getChildren().addAll(searchLayout.searchPanel(), channelLayout.newChannelPane(), channelView.getResultsBox());
 
         Pane pane2 = new Pane();
-        pane2.getChildren().add(layout2);
-        channelScene = new Scene(pane2);
+//        pane2.getChildren().add(layout2);
+//        channelScene = new Scene(pane2);
 
     }
 

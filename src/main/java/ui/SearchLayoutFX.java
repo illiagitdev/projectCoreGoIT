@@ -99,6 +99,6 @@ public class SearchLayoutFX {
     }
 
     public VBox searchPanel() {
-        return this.result;
+        return result;
     }
 }
