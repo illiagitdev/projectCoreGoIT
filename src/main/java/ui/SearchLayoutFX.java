@@ -49,9 +49,9 @@ public class SearchLayoutFX {
         searchAdvanced.setMaxWidth(75);
 
         maxRes.setPrefWidth(142);
-        maxRes.setPromptText("positive number");
+        maxRes.setPromptText("max results");
         daysPublished.setPrefWidth(142);
-        daysPublished.setPromptText("positive number");
+        daysPublished.setPromptText("days published");
 
         searchBoxExtend.setSpacing(15);
         searchBoxExtend.setPadding(new Insets(5, 5, 5, 5));
