@@ -26,12 +26,9 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class SearchControlsFX {
-    private static final OkHttpClient client = new OkHttpClient();
-
+public class SearchControlsFX implements Controls{
     private static HttpUrl http;
     private static ObjectMapper mapper = new ObjectMapper();
-    private static final String DATE_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
 
     public static OkHttpClient getClient() {
         return client;

@@ -48,18 +48,17 @@ public class OperationalFX {
             System.out.println("client OkHTTP was closed");
         });
 
-        // channel layout
-        ChannelView channelLayout = new ChannelView();
+        // channel layout - switching with general results view like on/off by visibility - no good
+//        ChannelView channelLayout = new ChannelView();
         ResultsOutputLayoutFX channelView = new ResultsOutputLayoutFX(WIDTH, HEIGHT, 210);
 
-        VBox layout2 = new VBox();
+//        VBox layout2 = new VBox();
         // here search window no more accessible if added to second layout
 //        layout2.getChildren().addAll(searchLayout.searchPanel(), channelLayout.newChannelPane(), channelView.getResultsBox());
 
-        Pane pane2 = new Pane();
+//        Pane pane2 = new Pane();
 //        pane2.getChildren().add(layout2);
 //        channelScene = new Scene(pane2);
-
     }
 
     private void setupStage(Stage stage) {
