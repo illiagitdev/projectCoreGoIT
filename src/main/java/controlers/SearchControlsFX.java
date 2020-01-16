@@ -38,6 +38,7 @@ public class SearchControlsFX implements Controls{
         // skipp search if no text for empty search
         if (searchText.isEmpty()) {
             System.out.println("No search text!!!" + this.getClass().getSimpleName());
+            AlertBox.display("Search text", "There is no text in search field!");
             return;
         }
         System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + searchText + ConsoleColors.RESET);
@@ -53,18 +54,19 @@ public class SearchControlsFX implements Controls{
                 return;
             }
 
-            if (!isPositiveInteger(maxRes)) {
+            if (notPositiveInteger(maxRes)) {
                 System.out.println("No maxRes defined!!!" + this.getClass().getSimpleName());
                 AlertBox.display("Max Results", "Max results not indicated!");
                 return;
             }
 
-            if (!isPositiveInteger(daysPublished)) {
+            if (notPositiveInteger(daysPublished)) {
                 System.out.println("No daysPublished defined!!!" + this.getClass().getSimpleName());
                 AlertBox.display("Days published", "Days published not indicated!");
                 return;
             }
 
+            //reformat date for search request to 1970-01-01T00:00:00Z
             LocalDate newDate = LocalDate.now().minusDays(Integer.parseInt(daysPublished));
             LocalDateTime seekingDate = LocalDateTime.of(newDate, LocalTime.MIDNIGHT);
             String publishedAfter = seekingDate.format(DateTimeFormatter.ofPattern(DATE_FORMAT));
@@ -76,21 +78,21 @@ public class SearchControlsFX implements Controls{
             searchEngine(http, resultsList);
     }
 
-    private boolean isPositiveInteger(String text) {
+    private boolean notPositiveInteger(String text) {
         if (text.isEmpty()) {
-            return false;
+            return true;
         }
         for (int i = 0; i < text.length(); i++) {
             if (i == 0 && text.charAt(i) == '-') {
                 if (text.length() == 1) {
-                    return false;
+                    return true;
                 }
             }
             if (Character.digit(text.charAt(i), 10) < 0) {
-                return false;
+                return true;
             }
         }
-        return true;
+        return false;
     }
 
     private void searchEngine(HttpUrl http, ListView<GridPane> listView) {
@@ -133,12 +135,9 @@ public class SearchControlsFX implements Controls{
                         sample.add(new SearchResultView(searchResult).newList());
                     }
 
-                    ObservableList<GridPane> observableList = FXCollections.observableList(sample);
-
                     //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
-                    Platform.runLater(() -> {
-                        listView.setItems(observableList);
-                    });
+                    ObservableList<GridPane> observableList = FXCollections.observableList(sample);
+                    Platform.runLater(() -> listView.setItems(observableList));
                 }
             }
 
