@@ -50,14 +50,16 @@ public class BuildHttpRequest {
         return httpUrl;
     }
 
+    //'https://www.googleapis.com/youtube/v3/channels?key=[YOUR_API_KEY]'
     public static HttpUrl buildChannelHttpUrl(String channelID) {
         HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
                 .addPathSegment("youtube")
                 .addPathSegment("v3")
                 .addPathSegment("channels")
-                .addQueryParameter("part", "snippet%contentDetails%statistics")
-                .addQueryParameter("id", channelID)
-                .addQueryParameter("MaxResults", "10")
+//                .addQueryParameter("part", "snippet%contentDetails%statistics")
+//                .addQueryParameter("id", channelID)
+                .addQueryParameter("maxResults", "10")
+                .addQueryParameter("key", KEY)
                 .build();
         System.out.println(httpUrl + " BuildHttpRequest.buildChannelHttpUrl ");
         return httpUrl;
