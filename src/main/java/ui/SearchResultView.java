@@ -2,6 +2,7 @@ package ui;
 
 import apiConnection.BuildHttpRequest;
 import controlers.Controls;
+import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import messageBoxes.AlertBox;
 import result.ImageLoader;
 import result.SearchResult;
 
@@ -35,6 +37,7 @@ public class SearchResultView extends ListCell<String> implements Controls {
                 DateTimeFormatter.ofPattern(DATE_FORMAT)).format(DateTimeFormatter.ofPattern(DATE_FORMAT_SHOW)));
         imageView = new ImageView();
         gridPane = new GridPane();
+
         String urlIDChannel = searchResult.getUrlIDChannel();
         channelNameActions(urlIDChannel, searchResult.getChannelName());
 
@@ -57,13 +60,17 @@ public class SearchResultView extends ListCell<String> implements Controls {
     private void channelNameActions(String urlIDChannel, String name) {
         channelName.setCursor(Cursor.HAND);
         channelName.setOnMouseClicked(event -> {
-            Stage stage = new Stage();
-            stage.setTitle(String.valueOf(name));
-            stage.initModality(Modality.APPLICATION_MODAL);
-            Scene scene = new Scene(new ChannelUI(urlIDChannel).newChannelPane());
-            stage.setScene(scene);
-            stage.setOnCloseRequest(event1 -> System.out.println("Channel watch terminated!"));
-            stage.show();
+            if(urlIDChannel != null) {
+                Stage stage = new Stage();
+                stage.setTitle(String.valueOf(name));
+                stage.initModality(Modality.APPLICATION_MODAL);
+                Scene scene = new Scene(new ChannelUI(urlIDChannel).newChannelPane());
+                stage.setScene(scene);
+                stage.setOnCloseRequest(event1 -> System.out.println("Channel watch terminated!"));
+                stage.show();
+            }else {
+                AlertBox.display("No Channel", "No Channel found!");
+            }
         });
     }
 
