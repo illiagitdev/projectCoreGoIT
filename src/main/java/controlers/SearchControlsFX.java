@@ -129,14 +129,10 @@ public class SearchControlsFX implements Controls{
                                     .setChannelName(item.getSnippet().getChannelTitle())
                                     .setPublicationDate(item.getSnippet().getPublishedAt())
                                     .setUrlID(item.getId().getVideoId())
-                                    .setUrlIDChannel(item.getId().getChannelId())
+                                    .setUrlIDChannel(item.getSnippet().getChannelId())
                                     .setUrlPathToImage(getFirstUrl(item.getSnippet().getThumbnails()))
                                     .build();
                             searchResults.add(result);
-
-                            //test
-                            System.out.println("\tRetrieved: video = " + item.getId().getVideoId() + " channel = " + item.getId().getChannelId());
-                            System.out.println("\tResponseAPI: video = " + result.getUrlID() + " channel = " + result.getUrlIDChannel());
                         }
                     }
 

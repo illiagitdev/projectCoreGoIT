@@ -7,10 +7,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import result.ImageLoader;
 import result.SearchResult;
 
 import java.time.LocalDateTime;
@@ -20,23 +22,30 @@ public class ChannelView extends ListCell<String> implements Controls {
     private Button view;
     private GridPane gridPane;
     private Label videoName;
+    private ImageView imageView;
 
     public ChannelView(SearchResult searchResult) {
         view = new Button("View");
         videoName = new Label(searchResult.getVideoName());
         Label published = new Label(LocalDateTime.parse(searchResult.getPublicationDate(),
                 DateTimeFormatter.ofPattern(DATE_FORMAT)).format(DateTimeFormatter.ofPattern(DATE_FORMAT_SHOW)));
+        imageView = new ImageView();
         gridPane = new GridPane();
         String urlID = searchResult.getUrlID();
 
         onClick(BuildHttpRequest.buildYouTubeWatchUrl(urlID));
 
-        gridPane.add(view, 0, 0);
-        gridPane.add(videoName, 1, 0);
-        gridPane.add(published, 2, 0);
+        imageView.setFitHeight(30);
+        imageView.setFitWidth(45);
+        gridPane.add(imageView, 0, 0);
+        gridPane.add(view, 1, 0);
+        gridPane.add(videoName, 2, 0);
+        gridPane.add(published, 3, 0);
         gridPane.setHgap(10);
         gridPane.setVgap(8);
         gridPane.setPadding(new Insets(10, 10, 10, 10));
+
+        loadImage(searchResult.getUrlPathToImage());
     }
 
   private void onClick(String videoURL) {
@@ -58,7 +67,13 @@ public class ChannelView extends ListCell<String> implements Controls {
         });
     }
 
+    private void loadImage(String urlPathToImage) {
+        System.out.println("URL for images - " + urlPathToImage + " | " + this.getClass().getSimpleName());
+        new Thread(new ImageLoader(imageView,urlPathToImage)).start();
+    }
+
     public GridPane newList() {
+        System.out.println("New grid was created for channel" + this.getClass().getSimpleName());
         gridPane.setHgap(15);
         return gridPane;
     }

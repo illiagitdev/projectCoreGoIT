@@ -1,36 +1,45 @@
 package ui;
 
+import controlers.SearchControlsFX;
+import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import result.ImageLoader;
-import result.SearchResult;
 
 public class ChannelUI {
     private String urlIDChannel;
-    private ImageView imageView;
+    private String imageUrl;
+    private ImageView image;
 
     public ChannelUI(String urlIDChannel) {
+        System.out.println("New channel created!! " + Thread.currentThread().getName()
+        + " channelID: " + urlIDChannel);
         this.urlIDChannel = urlIDChannel;
     }
 
     public Pane newChannelPane() {
-//        ChannelView channelLayout = new ChannelView(new SearchResult(...));
-        ResultsOutputLayoutFX channelView = new ResultsOutputLayoutFX(700, 85, 310);
+        ResultsOutputLayoutFX channelView = new ResultsOutputLayoutFX(700, 850, 210);
 
-        Pane pane = new Pane();
-        VBox channelInfo = new VBox();
+        Label name = new Label("name");
+        Label description = new Label("description");
+        VBox channelInfo = new VBox(name, description);
 
-        ImageView channelImage = new ImageView();
-
+        ImageView channelImage = new ImageView(new Image("https://i.ytimg.com/vi/yWpKll3G_a0/default.jpg"));
         HBox header = new HBox(channelImage, channelInfo);
 
-        return pane;
-    }
+        //loadImage:
+//        System.out.println("URL for images - " + imageUrl + " | " + this.getClass().getSimpleName());
+//        new Thread(new ImageLoader(image, imageUrl)).start();
 
-    private void loadImage(String urlPathToImage) {
-        System.out.println("URL for images - " + urlPathToImage + " | " + this.getClass().getSimpleName());
-        new Thread(new ImageLoader(imageView,urlPathToImage)).start();
+        //handle content: fill last videos
+        SearchControlsFX controls = new SearchControlsFX();
+        controls.channelSearch(urlIDChannel, channelView.getResultsList());
+
+        Pane pane = new Pane();
+        pane.getChildren().addAll(header, channelView.getResultsBox());
+        return pane;
     }
 }

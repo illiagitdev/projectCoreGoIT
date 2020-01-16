@@ -2,7 +2,6 @@ package ui;
 
 import apiConnection.BuildHttpRequest;
 import controlers.Controls;
-import javafx.application.Platform;
 import javafx.geometry.Insets;
 import javafx.scene.Cursor;
 import javafx.scene.Scene;

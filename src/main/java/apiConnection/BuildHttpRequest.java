@@ -22,6 +22,7 @@ public class BuildHttpRequest {
                     .addQueryParameter("maxResults", maxResults)
                     .addQueryParameter("publishedAfter", publishedDays)
                     .addQueryParameter("q", URLEncoder.encode(searchText, "UTF-8"))
+                    .addQueryParameter("type", "video")
                     .addQueryParameter("key", KEY)
                     .build();
         } catch (UnsupportedEncodingException e) {
@@ -41,6 +42,7 @@ public class BuildHttpRequest {
                     .addQueryParameter("part", "snippet")
                     .addQueryParameter("maxResults", "25")
                     .addQueryParameter("q", URLEncoder.encode(searchText, "UTF-8"))
+                    .addQueryParameter("type", "video")
                     .addQueryParameter("key", KEY)
                     .build();
         } catch (UnsupportedEncodingException e) {
