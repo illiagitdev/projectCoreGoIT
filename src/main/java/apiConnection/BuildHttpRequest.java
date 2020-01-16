@@ -54,11 +54,12 @@ public class BuildHttpRequest {
         HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
                 .addPathSegment("youtube")
                 .addPathSegment("v3")
-                .addPathSegment("channels")
+                .addPathSegment("search")
                 .addQueryParameter("part", "snippet")
-                .addQueryParameter("channelID", channelID)
+                .addQueryParameter("channelId", channelID)
                 .addQueryParameter("maxResults", "10")
                 .addQueryParameter("order", "date")
+                .addQueryParameter("type", "video")
                 .addQueryParameter("key", KEY)
                 .build();
         System.out.println(httpUrl + " BuildHttpRequest.buildChannelHttpUrl ");
