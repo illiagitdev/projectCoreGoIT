@@ -8,9 +8,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
-import javafx.scene.effect.Effect;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.Border;
 import javafx.scene.layout.GridPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Modality;
@@ -37,7 +35,6 @@ public class SearchResultView extends ListCell<String> implements Controls {
                 DateTimeFormatter.ofPattern(DATE_FORMAT)).format(DateTimeFormatter.ofPattern(DATE_FORMAT_SHOW)));
         imageView = new ImageView();
         gridPane = new GridPane();
-        String urlID = searchResult.getUrlID();
         String urlIDChannel = searchResult.getUrlIDChannel();
         channelNameActions(urlIDChannel, searchResult.getChannelName());
 
@@ -58,8 +55,8 @@ public class SearchResultView extends ListCell<String> implements Controls {
     }
 
     private void channelNameActions(String urlIDChannel, String name) {
-        this.channelName.setCursor(Cursor.HAND);
-        this.channelName.setOnMouseClicked(event -> {
+        channelName.setCursor(Cursor.HAND);
+        channelName.setOnMouseClicked(event -> {
             Stage stage = new Stage();
             stage.setTitle(String.valueOf(name));
             stage.initModality(Modality.APPLICATION_MODAL);
