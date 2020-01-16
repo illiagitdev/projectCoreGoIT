@@ -14,6 +14,7 @@ import responseAll.ResponseVideoAPI;
 import responseAll.components.Items;
 import responseAll.components.Thumbnails;
 import result.SearchResult;
+import ui.ChannelView;
 import ui.SearchResultView;
 import ui.ConsoleColors;
 
@@ -34,6 +35,11 @@ public class SearchControlsFX implements Controls{
         return client;
     }
 
+    public void channelSearch(String channelID, ListView<GridPane> listView){
+        http = BuildHttpRequest.buildChannelHttpUrl(channelID);
+        searchEngine(http, listView, false);
+    }
+
     public void simpleSearch(String searchText, ListView<GridPane> listView) {
         // skipp search if no text for empty search
         if (searchText.isEmpty()) {
@@ -43,7 +49,7 @@ public class SearchControlsFX implements Controls{
         }
         System.out.println(ConsoleColors.BLUE_BOLD + "Search request: " + searchText + ConsoleColors.RESET);
         http = BuildHttpRequest.buildHttpUrl(searchText);
-        searchEngine(http, listView);
+        searchEngine(http, listView, true);
     }
 
     public void advancedSearch(String searchText, String maxRes, String daysPublished, ListView<GridPane> resultsList) {
@@ -75,7 +81,7 @@ public class SearchControlsFX implements Controls{
                     + "\nmaxRes = " + maxRes + "\tdaysPublished = " + daysPublished + " : " + publishedAfter);
 
             http = BuildHttpRequest.buildHttpUrl(searchText, maxRes, publishedAfter);
-            searchEngine(http, resultsList);
+            searchEngine(http, resultsList, true);
     }
 
     private boolean notPositiveInteger(String text) {
@@ -95,7 +101,7 @@ public class SearchControlsFX implements Controls{
         return false;
     }
 
-    private void searchEngine(HttpUrl http, ListView<GridPane> listView) {
+    private void searchEngine(HttpUrl http, ListView<GridPane> listView, boolean generalSearch) {
         Call call = client.newCall(new Request.Builder().
                 url(http)
                 .get()
@@ -127,12 +133,24 @@ public class SearchControlsFX implements Controls{
                                     .setUrlPathToImage(getFirstUrl(item.getSnippet().getThumbnails()))
                                     .build();
                             searchResults.add(result);
+
+                            //test
+                            System.out.println("\tRetrieved: video = " + item.getId().getVideoId() + " channel = " + item.getId().getChannelId());
+                            System.out.println("\tResponseAPI: video = " + result.getUrlID() + " channel = " + result.getUrlIDChannel());
                         }
                     }
 
+                    // return either objects for general search or channel search
+                    // current solution
                     List<GridPane> sample = new ArrayList<>();
-                    for (SearchResult searchResult : searchResults) {
-                        sample.add(new SearchResultView(searchResult).newList());
+                    if(generalSearch) {
+                        for (SearchResult searchResult : searchResults) {
+                            sample.add(new SearchResultView(searchResult).newList());
+                        }
+                    }else {
+                        for (SearchResult searchResult : searchResults) {
+                            sample.add(new ChannelView(searchResult).newList());
+                        }
                     }
 
                     //make task run later in main FX thread save from - "IllegalStateException: Not on FX application thread"
@@ -143,6 +161,12 @@ public class SearchControlsFX implements Controls{
 
             @Override
             public void onFailure(Call call, IOException e) {
+                try {
+                    if(call.execute().code() >= 400)
+                        System.out.println("Error on client side!");
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 System.out.println("Error:");
                 System.out.println(Arrays.toString(e.getStackTrace()));
             }
