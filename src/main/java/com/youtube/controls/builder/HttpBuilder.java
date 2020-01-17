@@ -3,48 +3,34 @@ package com.youtube.controls.builder;
 import com.youtube.config.HttpConfig;
 import okhttp3.HttpUrl;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-
 public class HttpBuilder implements HttpConfig {
-    //todo: read other languages when do search, check double encoding
     public static HttpUrl buildHttpUrl(String searchText, String maxResults, String publishedDays) {
-        HttpUrl httpUrl = null;
-        try {
-            httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
+        HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
                     .addPathSegment("youtube")
                     .addPathSegment("v3")
                     .addPathSegment("search")
                     .addQueryParameter("part", "snippet")
                     .addQueryParameter("maxResults", maxResults)
                     .addQueryParameter("publishedAfter", publishedDays)
-                    .addQueryParameter("q", URLEncoder.encode(searchText, "UTF-8"))
+                    .addQueryParameter("q", searchText)
                     .addQueryParameter("type", "video")
                     .addQueryParameter("key", KEY)
                     .build();
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("Failed in encoding (HttpUrl buildHttpUrl(3))");
-        }
         System.out.println(httpUrl + " BuildHttpRequest.buildHttpUrl(searchText, maxResults, publishedDays)");
         return httpUrl;
     }
 
     public static HttpUrl buildHttpUrl(String searchText) {
-        HttpUrl httpUrl = null;
-        try {
-            httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
-                    .addPathSegment("youtube")
-                    .addPathSegment("v3")
-                    .addPathSegment("search")
-                    .addQueryParameter("part", "snippet")
-                    .addQueryParameter("maxResults", "25")
-                    .addQueryParameter("q", URLEncoder.encode(searchText, "UTF-8"))
-                    .addQueryParameter("type", "video")
-                    .addQueryParameter("key", KEY)
-                    .build();
-        } catch (UnsupportedEncodingException e) {
-            System.out.println("Failed in encoding (HttpUrl buildHttpUrl(1))");
-        }
+        HttpUrl httpUrl = HttpUrl.parse(ROOT_URL).newBuilder()
+                        .addPathSegment("youtube")
+                        .addPathSegment("v3")
+                        .addPathSegment("search")
+                        .addQueryParameter("part", "snippet")
+                        .addQueryParameter("maxResults", "25")
+                        .addQueryParameter("q", searchText)
+                        .addQueryParameter("type", "video")
+                        .addQueryParameter("key", KEY)
+                        .build();
         System.out.println(httpUrl + " BuildHttpRequest.buildHttpUrl(searchText)");
         return httpUrl;
     }

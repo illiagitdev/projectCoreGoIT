@@ -61,6 +61,7 @@ public class SimpleResponse {
             return this;
         }
 
+
         public SimpleResponse.Builder setPublicationDate(String publicationDate) {
             this.publicationDate = publicationDate;
 

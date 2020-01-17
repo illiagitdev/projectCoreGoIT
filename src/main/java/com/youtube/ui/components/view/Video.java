@@ -38,8 +38,8 @@ public class Video extends ListCell<String> implements Config {
         imageView = new ImageView();
         gridPane = new GridPane();
 
-        String urlIDChannel = searchResult.getUrlIDChannel();
-        channelNameActions(urlIDChannel, searchResult.getChannelName());
+        //todo: for channel description we need to do search in CHANNEL and put it here!!!
+        channelNameActions(searchResult.getChannelName(), "channel description", searchResult.getUrlIDChannel(), searchResult.getUrlPathToImage());
 
         onClick(HttpBuilder.buildYouTubeWatchUrl(searchResult.getUrlID()));
 
@@ -57,14 +57,15 @@ public class Video extends ListCell<String> implements Config {
         loadImage(searchResult.getUrlPathToImage());
     }
 
-    private void channelNameActions(String urlIDChannel, String name) {
-        channelName.setCursor(Cursor.HAND);
-        channelName.setOnMouseClicked(event -> {
+    private void channelNameActions(String channelName, String description, String urlIDChannel, String urlImage) {
+        this.channelName.setCursor(Cursor.HAND);
+        this.channelName.setOnMouseClicked(event -> {
             if(urlIDChannel != null) {
                 Stage stage = new Stage();
-                stage.setTitle(String.valueOf(name));
+                stage.setTitle(String.valueOf(channelName));
                 stage.initModality(Modality.APPLICATION_MODAL);
-                Scene scene = new Scene(new ChannelPanel(urlIDChannel).newChannelPane());
+                ChannelPanel channel = new ChannelPanel(channelName, description, urlIDChannel, urlImage);
+                Scene scene = new Scene(channel.newChannelPane());
                 stage.setScene(scene);
                 stage.setOnCloseRequest(event1 -> System.out.println("Channel watch terminated!"));
                 stage.show();
